@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ElementRef } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 
@@ -8,8 +8,19 @@ import { CardModule } from 'primeng/card';
   standalone: true,
   imports: [CommonModule, ButtonModule, CardModule],
   templateUrl: './menu.component.html',
-  styleUrl: './menu.component.css'
+  styleUrl: './menu.component.css',
 })
 export class MenuComponent {
 
+  constructor(private el: ElementRef) { }
+
+  toggle() {
+    const menu = this.el.nativeElement.querySelector(".card-container");
+
+    if (menu.classList.contains("is-visible")) {
+      menu.classList.remove("is-visible");
+    } else {
+      menu.classList.add("is-visible");
+    }
+  }
 }
