@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
+import { ViewComponent } from "../../../shared/view/view.component";
 
 @Component({
   selector: 'app-performance-view',
   standalone: true,
-  imports: [],
+  imports: [ViewComponent],
   templateUrl: './performance-view.component.html',
   styleUrl: './performance-view.component.css'
 })
