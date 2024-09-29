@@ -1,6 +1,7 @@
 .card-container {
     height: 100%;
     padding: 1.5rem;
+    padding-right: 0;
     z-index: 1000;
     transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
 }
