@@ -1,12 +1,18 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 
 @Component({
   selector: 'app-menu',
   standalone: true,
-  imports: [CommonModule, ButtonModule, CardModule],
+  imports: [
+    CommonModule, 
+    ButtonModule, 
+    CardModule, 
+    RouterModule
+  ],
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.css',
 })

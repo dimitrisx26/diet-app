@@ -21,6 +21,7 @@
 }
 
 .content a {
+    text-decoration: none;
     margin-bottom: 32px;
     display: flex;
     align-items: center;
@@ -37,7 +38,7 @@
     color: #333;
 }
 
-.content a:active {
+.content a.active {
     background-color: #e0e0e0;
     color: #000;
 }
