@@ -1,3 +1,20 @@
 <app-view header="Profile">
-    <div>profile</div>
+    <div class="profile-content">
+        <p-panel [toggleable]="true">
+            <ng-template pTemplate="header">
+                <div class="custom-header">
+                    <span>User Info</span>
+                </div>
+            </ng-template>
+            <!-- Panel content goes here -->
+        </p-panel>
+        <p-panel [toggleable]="true">
+            <ng-template pTemplate="header">
+                <div class="custom-header">
+                    <span>Details</span>
+                </div>
+            </ng-template>
+            <!-- Panel content goes here -->
+        </p-panel>
+    </div>
 </app-view>
