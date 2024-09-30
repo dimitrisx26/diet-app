@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { ProfileViewComponent } from './components/user/profile/user-profile-view/profile-view.component';
-import { AttendanceViewComponent } from './components/user/attendance/attendance-view/attendance';
+import { AttendanceViewComponent } from './components/user/attendance/attendance-view/attendance-view.component';
 import { LeavesViewComponent } from './components/user/leaves/leaves-view/leaves-view.component';
 import { PerformanceViewComponent } from './components/user/performance/performance-view/performance-view.component';
 import { RequestsViewComponent } from './components/user/requests/requests-view/requests-view.component';
