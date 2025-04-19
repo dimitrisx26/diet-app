@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LeavesViewComponent } from './leaves-view.component';
+import { ChatViewComponent } from './chat-view.component';
 
-describe('LeavesViewComponent', () => {
-  let component: LeavesViewComponent;
-  let fixture: ComponentFixture<LeavesViewComponent>;
+describe('ChatViewComponent', () => {
+  let component: ChatViewComponent;
+  let fixture: ComponentFixture<ChatViewComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [LeavesViewComponent]
+      imports: [ChatViewComponent]
     })
     .compileComponents();
-    
-    fixture = TestBed.createComponent(LeavesViewComponent);
+
+    fixture = TestBed.createComponent(ChatViewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
