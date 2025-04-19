@@ -6,44 +6,6 @@
     transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
 }
 
-.content,
-.footer {
-    display: flex;
-    justify-content: center;
-}
-
-.footer {
-    padding-bottom: 1rem;
-}
-
-.content {
-    flex-direction: column;
-    overflow: scroll;
-}
-
-.content a {
-    text-decoration: none;
-    margin-bottom: 32px;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    cursor: pointer;
-    color: inherit;
-    padding: 8px;
-    border-radius: 4px;
-    transition: background-color 0.3s, color 0.3s;
-}
-
-.content a:hover {
-    background-color: #f0f0f0;
-    color: #333;
-}
-
-.content a.active {
-    background-color: #e0e0e0;
-    color: #000;
-}
-
 :host ::ng-deep .p-card .p-card-body {
     height: 100%;
 }
