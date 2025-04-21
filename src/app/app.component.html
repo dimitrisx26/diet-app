@@ -1,6 +1,13 @@
 <div class="h-full flex flex-row max-md:flex-col">
-  <app-menu></app-menu>
-  <div class="h-full w-full p-6">
-    <router-outlet></router-outlet>
-  </div>
+  @if (isAuthenticated) {
+    <app-menu></app-menu>
+    <div class="h-full w-full p-6">
+      <router-outlet></router-outlet>
+    </div>
+  }
+  @else {
+    <div class="h-full w-full flex items-center justify-center">
+      <app-auth></app-auth>
+    </div>
+  }
 </div>

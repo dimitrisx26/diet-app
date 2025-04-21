@@ -1,0 +1,6 @@
+@if (isLogin) {
+    <app-login [(isLogin)]="isLogin"></app-login>
+}
+@else {
+    <app-signup [(isLogin)]="isLogin"></app-signup>
+}
