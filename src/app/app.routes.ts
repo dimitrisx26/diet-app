@@ -26,6 +26,6 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./components/user/appointment/appointment-view/appointment-view.component').then(m => m.AppointmentViewComponent)
   },
-  { path: '', redirectTo: '/auth', pathMatch: 'full' },
-  { path: '**', redirectTo: '/auth' },
+  { path: '', redirectTo: '/profile', pathMatch: 'full' },
+  { path: '**', redirectTo: '/profile' },
 ];
