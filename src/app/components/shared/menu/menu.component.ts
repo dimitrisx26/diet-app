@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef } from '@angular/core';
+import { Component, ElementRef, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
@@ -11,7 +11,7 @@ import { AuthService } from '../../../services/auth/auth.service';
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.css',
 })
-export class MenuComponent {
+export class MenuComponent implements OnInit {
   /**
    * The state of the application
    */
@@ -27,6 +27,21 @@ export class MenuComponent {
     private el: ElementRef,
     private router: Router,
   ) {}
+
+  /** Initializes the component */
+  ngOnInit() {
+    this.setAdminState();
+  }
+
+  /**
+   * Sets the admin state based on the logged-in user.
+   */
+  async setAdminState() {
+    if (!this.auth.loggedInUser) {
+      await this.auth.checkAuth();
+    }
+    this.isAdmin = this.auth.loggedInUser?.$id === 'admin';
+  }
 
   /**
    * Toggles the visibility of the menu.
