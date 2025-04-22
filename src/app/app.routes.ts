@@ -45,6 +45,14 @@ export const routes: Routes = [
   },
   // Admin routes
   {
+    path: 'admin',
+    loadComponent: () =>
+      import('./components/admin/admin.component').then(
+        (c) => c.AdminComponent,
+      ),
+    canActivate: [adminGuard],
+  },
+  {
     path: 'admin/users',
     loadComponent: () =>
       import('./components/admin/users-list/users-list.component').then(

@@ -12,31 +12,59 @@
 <div class="card-container">
   <p-card header="DietAssist" [style]="{ height: '100%', width: '200px' }">
     <div class="flex flex-col overflow-scroll">
-      <a
-        routerLink="/profile"
-        routerLinkActive="bg-gray-200 text-black"
-        class="mb-8 flex cursor-pointer items-center gap-2 rounded p-2 text-inherit no-underline transition-colors duration-300 hover:bg-gray-100 hover:text-gray-800"
-      >
-        <span class="pi pi-user"></span>Profile
-      </a>
-      <a
-        routerLink="/diet-plan"
-        routerLinkActive="bg-gray-200 text-black"
-        class="mb-8 flex cursor-pointer items-center gap-2 rounded p-2 text-inherit no-underline transition-colors duration-300 hover:bg-gray-100 hover:text-gray-800"
-        ><span class="pi pi-table"></span>Diet Plan</a
-      >
-      <a
-        routerLink="/chat"
-        routerLinkActive="bg-gray-200 text-black"
-        class="mb-8 flex cursor-pointer items-center gap-2 rounded p-2 text-inherit no-underline transition-colors duration-300 hover:bg-gray-100 hover:text-gray-800"
-        ><span class="pi pi-comments"></span>Chat</a
-      >
-      <a
-        routerLink="/appointment"
-        routerLinkActive="bg-gray-200 text-black"
-        class="mb-8 flex cursor-pointer items-center gap-2 rounded p-2 text-inherit no-underline transition-colors duration-300 hover:bg-gray-100 hover:text-gray-800"
-        ><span class="pi pi-calendar"></span>Schedule Appointment</a
-      >
+      @if (isAdmin) {
+        <a
+          routerLink="/admin"
+          routerLinkActive="bg-gray-200 text-black"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="mb-8 flex cursor-pointer items-center gap-2 rounded p-2 text-inherit no-underline transition-colors duration-300 hover:bg-gray-100 hover:text-gray-800"
+          ><span class="pi pi-cog"></span>Dashboard</a
+        >
+        <a
+          routerLink="/admin/users"
+          routerLinkActive="bg-gray-200 text-black"
+          class="mb-8 flex cursor-pointer items-center gap-2 rounded p-2 text-inherit no-underline transition-colors duration-300 hover:bg-gray-100 hover:text-gray-800"
+          ><span class="pi pi-users"></span>Users</a
+        >
+        <a
+          routerLink="/admin/chats"
+          routerLinkActive="bg-gray-200 text-black"
+          class="mb-8 flex cursor-pointer items-center gap-2 rounded p-2 text-inherit no-underline transition-colors duration-300 hover:bg-gray-100 hover:text-gray-800"
+          ><span class="pi pi-comments"></span>Chats</a
+        >
+        <a
+          routerLink="/admin/appointments"
+          routerLinkActive="bg-gray-200 text-black"
+          class="mb-8 flex cursor-pointer items-center gap-2 rounded p-2 text-inherit no-underline transition-colors duration-300 hover:bg-gray-100 hover:text-gray-800"
+          ><span class="pi pi-calendar"></span>Appointments</a
+        >
+      } @else {
+        <a
+          routerLink="/profile"
+          routerLinkActive="bg-gray-200 text-black"
+          class="mb-8 flex cursor-pointer items-center gap-2 rounded p-2 text-inherit no-underline transition-colors duration-300 hover:bg-gray-100 hover:text-gray-800"
+        >
+          <span class="pi pi-user"></span>Profile
+        </a>
+        <a
+          routerLink="/diet-plan"
+          routerLinkActive="bg-gray-200 text-black"
+          class="mb-8 flex cursor-pointer items-center gap-2 rounded p-2 text-inherit no-underline transition-colors duration-300 hover:bg-gray-100 hover:text-gray-800"
+          ><span class="pi pi-table"></span>Diet Plan</a
+        >
+        <a
+          routerLink="/chat"
+          routerLinkActive="bg-gray-200 text-black"
+          class="mb-8 flex cursor-pointer items-center gap-2 rounded p-2 text-inherit no-underline transition-colors duration-300 hover:bg-gray-100 hover:text-gray-800"
+          ><span class="pi pi-comments"></span>Chat</a
+        >
+        <a
+          routerLink="/appointment"
+          routerLinkActive="bg-gray-200 text-black"
+          class="mb-8 flex cursor-pointer items-center gap-2 rounded p-2 text-inherit no-underline transition-colors duration-300 hover:bg-gray-100 hover:text-gray-800"
+          ><span class="pi pi-calendar"></span>Schedule Appointment</a
+        >
+      }
     </div>
     <div class="flex justify-center pb-4">
       <p-button
@@ -44,6 +72,7 @@
         icon="pi pi-sign-out"
         [text]="true"
         severity="danger"
+        (onClick)="signOut()"
       />
     </div>
   </p-card>

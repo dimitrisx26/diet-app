@@ -12,7 +12,7 @@
               icon="pi pi-user"
               class="w-full max-w-[17.35rem]"
               styleClass="w-full mx-auto"
-              (onClick)="toggleLogin()"
+              (onClick)="toggleForm()"
             />
           </div>
         </div>
@@ -29,17 +29,35 @@
           class="flex w-full flex-col items-center justify-center gap-8 md:w-5/12"
         >
           <h2 class="mb-2 text-3xl font-semibold text-gray-700">Sign Up</h2>
-          <div class="flex w-full flex-col gap-6">
+          <form
+            [formGroup]="signupForm"
+            (ngSubmit)="onSignup()"
+            class="flex w-full flex-col gap-6"
+          >
             <div>
               <p-floatLabel variant="on" class="w-full">
                 <input
                   pInputText
                   id="name"
                   type="text"
+                  formControlName="name"
                   class="focus:border-primary-500 focus:ring-primary-100 w-full rounded-lg border border-gray-300 transition focus:ring-2"
                 />
                 <label for="name" class="text-gray-500">Name</label>
               </p-floatLabel>
+              @if (
+                signupForm.get("name")?.touched &&
+                signupForm.get("name")?.invalid
+              ) {
+                <div class="mt-1 text-sm text-red-500">
+                  @if (signupForm.get("name")?.errors?.["required"]) {
+                    <div>Name is required.</div>
+                  }
+                  @if (signupForm.get("name")?.errors?.["minlength"]) {
+                    <div>Name must be at least 3 characters.</div>
+                  }
+                </div>
+              }
             </div>
             <div>
               <p-floatLabel variant="on" class="w-full">
@@ -47,10 +65,24 @@
                   pInputText
                   id="email"
                   type="email"
+                  formControlName="email"
                   class="focus:border-primary-500 focus:ring-primary-100 w-full rounded-lg border border-gray-300 transition focus:ring-2"
                 />
                 <label for="email" class="text-gray-500">Email</label>
               </p-floatLabel>
+              @if (
+                signupForm.get("email")?.touched &&
+                signupForm.get("email")?.invalid
+              ) {
+                <div class="mt-1 text-sm text-red-500">
+                  @if (signupForm.get("email")?.errors?.["required"]) {
+                    <div>Email is required.</div>
+                  }
+                  @if (signupForm.get("email")?.errors?.["email"]) {
+                    <div>Invalid email address.</div>
+                  }
+                </div>
+              }
             </div>
             <div>
               <p-floatLabel variant="on" class="w-full">
@@ -58,21 +90,38 @@
                   pInputText
                   id="password"
                   type="password"
+                  formControlName="password"
                   class="focus:border-primary-500 focus:ring-primary-100 w-full rounded-lg border border-gray-300 transition focus:ring-2"
                 />
                 <label for="password" class="text-gray-500">Password</label>
               </p-floatLabel>
+              @if (
+                signupForm.get("password")?.touched &&
+                signupForm.get("password")?.invalid
+              ) {
+                <div class="mt-1 text-sm text-red-500">
+                  @if (signupForm.get("password")?.errors?.["required"]) {
+                    <div>Password is required.</div>
+                  }
+                  @if (signupForm.get("password")?.errors?.["minlength"]) {
+                    <div>Password must be at least 6 characters.</div>
+                  }
+                </div>
+              }
             </div>
-          </div>
-          <div class="w-full">
-            <p-button
-              label="Sign Up"
-              icon="pi pi-user-plus"
-              severity="success"
-              class="w-full max-w-[17.35rem]"
-              styleClass="w-full mx-auto"
-            />
-          </div>
+            <div class="w-full">
+              <button
+                pButton
+                label="Sign Up"
+                icon="pi pi-user-plus"
+                severity="success"
+                class="w-full max-w-[17.35rem]"
+                styleClass="w-full mx-auto"
+                type="submit"
+                [disabled]="signupForm.invalid"
+              ></button>
+            </div>
+          </form>
         </div>
       </div>
     </ng-template>

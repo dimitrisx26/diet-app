@@ -1,0 +1,20 @@
+<app-view header="Dashboard">
+    <div class="p-8 flex flex-col gap-8 w-full">
+        <p-panel [toggleable]="true" class="p-0 w-full">
+            <ng-template pTemplate="header">
+                <div class="text-gray-600">
+                    <span>Info</span>
+                </div>
+            </ng-template>
+            <!-- Panel content goes here -->
+        </p-panel>
+        <p-panel [toggleable]="true" class="p-0 w-full">
+            <ng-template pTemplate="header">
+                <div class="text-gray-600">
+                    <span>Stats</span>
+                </div>
+            </ng-template>
+            <!-- Panel content goes here -->
+        </p-panel>
+    </div>
+</app-view>

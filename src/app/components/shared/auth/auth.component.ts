@@ -3,6 +3,7 @@ import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { AuthService } from '../../../services/auth/auth.service';
 
 @Component({
   selector: 'app-auth',
@@ -14,14 +15,19 @@ export class AuthComponent {
   /**
    * the state of the application
    */
-  isAuthenticated: boolean = true;
+  isAuthenticated: boolean;
 
   /**
    * Logic to switch between login and signup components
    */
   isLogin: boolean = true;
 
-  constructor(private router: Router) {}
+  constructor(
+    private auth: AuthService,
+    private router: Router,
+  ) {
+    this.isAuthenticated = this.auth.isAuthenticated;
+  }
 
   /**
    * Initialize component.

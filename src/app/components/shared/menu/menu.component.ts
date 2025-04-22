@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
+import { AuthService } from '../../../services/auth/auth.service';
 
 @Component({
   selector: 'app-menu',
@@ -12,9 +13,20 @@ import { CardModule } from 'primeng/card';
 })
 export class MenuComponent {
   /**
-   * @param el ElementRef
+   * The state of the application
    */
-  constructor(private el: ElementRef) {}
+  isAdmin: boolean = false;
+
+  /**
+   * @param auth Service to handle authentication
+   * @param el ElementRef
+   * @param router Router to navigate
+   */
+  constructor(
+    private auth: AuthService,
+    private el: ElementRef,
+    private router: Router,
+  ) {}
 
   /**
    * Toggles the visibility of the menu.
@@ -68,4 +80,13 @@ export class MenuComponent {
 
     this.close();
   };
+
+  /**
+   * Signs out the user and redirects to the login page.
+   */
+  signOut() {
+    this.auth.logout().then(() => {
+      this.router.navigate(['/auth']);
+    });
+  }
 }
