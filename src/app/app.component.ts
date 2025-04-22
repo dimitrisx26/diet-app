@@ -14,7 +14,7 @@ export class AppComponent {
   /**
    * the state of the application
    */
-  isAuthenticated: boolean = false;
+  isAuthenticated: boolean = true;
 
   /**
    * @param router Router service to navigate between routes
