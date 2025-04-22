@@ -20,6 +20,20 @@ export class AuthService {
   /** User name */
   name: string = '';
 
+  constructor() {
+    this.checkAuth();
+  }
+
+  /**
+   * Checks if the user is authenticated
+   */
+  async checkAuth() {
+    this.isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+    if (this.isAuthenticated) {
+      this.loggedInUser = await account.get();
+    }
+  }
+
   /**
    * Login the user
    * @param email the email of the user
@@ -27,8 +41,11 @@ export class AuthService {
    */
   async login(email: string, password: string) {
     await account.createEmailPasswordSession(email, password);
+
     this.loggedInUser = await account.get();
     this.isAuthenticated = true;
+
+    localStorage.setItem('isAuthenticated', 'true');
   }
 
   /**
@@ -49,5 +66,7 @@ export class AuthService {
     await account.deleteSession('current');
     this.loggedInUser = null;
     this.isAuthenticated = false;
+
+    localStorage.removeItem('isAuthenticated');
   }
 }

@@ -13,11 +13,6 @@ import { AuthService } from '../../../services/auth/auth.service';
 })
 export class AuthComponent {
   /**
-   * the state of the application
-   */
-  isAuthenticated: boolean;
-
-  /**
    * Logic to switch between login and signup components
    */
   isLogin: boolean = true;
@@ -25,15 +20,13 @@ export class AuthComponent {
   constructor(
     private auth: AuthService,
     private router: Router,
-  ) {
-    this.isAuthenticated = this.auth.isAuthenticated;
-  }
+  ) {}
 
   /**
    * Initialize component.
    */
   ngOnInit() {
-    if (this.isAuthenticated) {
+    if (this.auth.isAuthenticated) {
       this.router.navigate(['/profile']);
     }
   }

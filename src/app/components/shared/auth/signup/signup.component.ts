@@ -8,6 +8,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { AuthService } from '../../../../services/auth/auth.service';
 import { MessageService } from 'primeng/api';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-signup',
@@ -19,7 +20,9 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
     InputTextModule,
     ReactiveFormsModule,
     RouterModule,
+    ToastModule
   ],
+  providers: [MessageService],
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.css',
 })
@@ -49,7 +52,7 @@ export class SignupComponent {
   ) {
     this.signupForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(25)]],
       name: ['', [Validators.required, Validators.minLength(3)]],
     });
   }

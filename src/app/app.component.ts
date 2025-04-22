@@ -13,9 +13,12 @@ import { AuthService } from './services/auth/auth.service';
 })
 export class AppComponent {
   /**
-   * the state of the application
+   * Getter to check if the user is authenticated
+   * @returns true if the user is authenticated, false otherwise
    */
-  isAuthenticated: boolean;
+  get isAuthenticated(): boolean {
+    return this.auth.isAuthenticated;
+  }
 
   /**
    * @param auth AuthService instance to handle authentication
@@ -24,9 +27,7 @@ export class AppComponent {
   constructor(
     private auth: AuthService,
     private router: Router,
-  ) {
-    this.isAuthenticated = this.auth.isAuthenticated;
-  }
+  ) {}
 
   /**
    * Initialize component.

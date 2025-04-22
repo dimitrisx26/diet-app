@@ -16,6 +16,7 @@ export const appConfig: ApplicationConfig = {
         preset: Aura,
         options: {
           prefix: 'p',
+          ripple: true,
           darkModeSelector: 'light',
           cssLayer: false,
         },

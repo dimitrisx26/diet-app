@@ -2,71 +2,78 @@
   <p-card>
     <ng-template pTemplate="content">
       <div class="flex min-h-[500px] flex-col gap-12 p-12 md:flex-row">
-        <form
-          [formGroup]="loginForm"
-          (ngSubmit)="onLogin()"
-          class="flex w-full flex-col gap-6"
+        <!-- Login Form Section -->
+        <div
+          class="flex w-full flex-col items-center justify-center gap-8 md:w-8/12"
         >
-          <div>
-            <p-floatLabel variant="on" class="w-full">
-              <input
-                pInputText
-                id="email"
-                type="email"
-                formControlName="email"
-                class="focus:border-primary-500 focus:ring-primary-100 w-full rounded-lg border border-gray-300 transition focus:ring-2"
+          <h2 class="mb-2 text-3xl font-semibold text-gray-700">Log In</h2>
+          <form
+            [formGroup]="loginForm"
+            (ngSubmit)="onLogin()"
+            class="flex w-full flex-col gap-6"
+          >
+            <div>
+              <p-floatLabel variant="on" class="w-full">
+                <input
+                  pInputText
+                  id="email"
+                  type="email"
+                  formControlName="email"
+                  class="focus:border-primary-500 focus:ring-primary-100 w-full rounded-lg border border-gray-300 transition focus:ring-2"
+                />
+                <label for="email" class="text-gray-500">Email</label>
+              </p-floatLabel>
+              @if (
+                loginForm.get("email")?.touched &&
+                loginForm.get("email")?.invalid
+              ) {
+                <div class="mt-1 text-sm text-red-500">
+                  @if (loginForm.get("email")?.errors?.["required"]) {
+                    <div>Email is required.</div>
+                  }
+                  @if (loginForm.get("email")?.errors?.["email"]) {
+                    <div>Invalid email address.</div>
+                  }
+                </div>
+              }
+            </div>
+            <div>
+              <p-floatLabel variant="on" class="w-full">
+                <input
+                  pInputText
+                  id="password"
+                  type="password"
+                  formControlName="password"
+                  class="focus:border-primary-500 focus:ring-primary-100 w-full rounded-lg border border-gray-300 transition focus:ring-2"
+                />
+                <label for="password" class="text-gray-500">Password</label>
+              </p-floatLabel>
+              @if (
+                loginForm.get("password")?.touched &&
+                loginForm.get("password")?.invalid
+              ) {
+                <div class="mt-1 text-sm text-red-500">
+                  @if (loginForm.get("password")?.errors?.["required"]) {
+                    <div>Password is required.</div>
+                  }
+                  @if (loginForm.get("password")?.errors?.["minlength"]) {
+                    <div>Password must be at least 8 characters.</div>
+                  }
+                </div>
+              }
+            </div>
+            <div class="w-full">
+              <p-button
+                label="Login"
+                icon="pi pi-user"
+                class="w-full max-w-[17.35rem]"
+                styleClass="w-full mx-auto"
+                type="submit"
+                [disabled]="loginForm.invalid"
               />
-              <label for="email" class="text-gray-500">Email</label>
-            </p-floatLabel>
-            @if (
-              loginForm.get("email")?.touched && loginForm.get("email")?.invalid
-            ) {
-              <div class="mt-1 text-sm text-red-500">
-                @if (loginForm.get("email")?.errors?.["required"]) {
-                  <div>Email is required.</div>
-                }
-                @if (loginForm.get("email")?.errors?.["email"]) {
-                  <div>Invalid email address.</div>
-                }
-              </div>
-            }
-          </div>
-          <div>
-            <p-floatLabel variant="on" class="w-full">
-              <input
-                pInputText
-                id="password"
-                type="password"
-                formControlName="password"
-                class="focus:border-primary-500 focus:ring-primary-100 w-full rounded-lg border border-gray-300 transition focus:ring-2"
-              />
-              <label for="password" class="text-gray-500">Password</label>
-            </p-floatLabel>
-            @if (
-              loginForm.get("password")?.touched &&
-              loginForm.get("password")?.invalid
-            ) {
-              <div class="mt-1 text-sm text-red-500">
-                @if (loginForm.get("password")?.errors?.["required"]) {
-                  <div>Password is required.</div>
-                }
-                @if (loginForm.get("password")?.errors?.["minlength"]) {
-                  <div>Password must be at least 6 characters.</div>
-                }
-              </div>
-            }
-          </div>
-          <div class="w-full">
-            <p-button
-              label="Login"
-              icon="pi pi-user"
-              class="w-full max-w-[17.35rem]"
-              styleClass="w-full mx-auto"
-              type="submit"
-              [disabled]="loginForm.invalid"
-            />
-          </div>
-        </form>
+            </div>
+          </form>
+        </div>
         <!-- Divider -->
         <div class="flex w-full flex-col items-center justify-center md:w-2/12">
           <p-divider layout="vertical" class="!hidden md:!flex"
@@ -76,6 +83,7 @@
             ><b>OR</b></p-divider
           >
         </div>
+        <!-- Sign Up Button Section -->
         <div
           class="flex w-full flex-col items-center justify-center gap-8 md:w-5/12"
         >
@@ -84,7 +92,7 @@
             <p-button
               label="Sign Up"
               icon="pi pi-user-plus"
-              severity="success"
+              severity="info"
               class="w-full max-w-[17.35rem]"
               styleClass="w-full mx-auto"
               (onClick)="toggleForm()"
@@ -95,3 +103,5 @@
     </ng-template>
   </p-card>
 </div>
+
+<p-toast />

@@ -2,6 +2,7 @@
   <p-card>
     <ng-template pTemplate="content">
       <div class="flex min-h-[500px] flex-col gap-12 p-12 md:flex-row">
+        <!-- Login Form Section -->
         <div
           class="flex w-full flex-col items-center justify-center gap-8 md:w-5/12"
         >
@@ -26,8 +27,9 @@
           >
         </div>
         <div
-          class="flex w-full flex-col items-center justify-center gap-8 md:w-5/12"
+          class="flex w-full flex-col items-center justify-center gap-8 md:w-8/12"
         >
+          <!-- Sign Up Form Section -->
           <h2 class="mb-2 text-3xl font-semibold text-gray-700">Sign Up</h2>
           <form
             [formGroup]="signupForm"
@@ -104,7 +106,10 @@
                     <div>Password is required.</div>
                   }
                   @if (signupForm.get("password")?.errors?.["minlength"]) {
-                    <div>Password must be at least 6 characters.</div>
+                    <div>Password must be at least 8 characters.</div>
+                  }
+                  @if (signupForm.get("password")?.errors?.["maxlength"]) {
+                    <div>Password cannot exceed 25 characters.</div>
                   }
                 </div>
               }
@@ -114,7 +119,7 @@
                 pButton
                 label="Sign Up"
                 icon="pi pi-user-plus"
-                severity="success"
+                severity="info"
                 class="w-full max-w-[17.35rem]"
                 styleClass="w-full mx-auto"
                 type="submit"
@@ -127,3 +132,5 @@
     </ng-template>
   </p-card>
 </div>
+
+<p-toast />

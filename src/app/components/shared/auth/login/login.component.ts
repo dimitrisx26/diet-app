@@ -14,6 +14,8 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { ToastModule } from 'primeng/toast';
+
 @Component({
   selector: 'app-login',
   imports: [
@@ -25,7 +27,9 @@ import {
     InputTextModule,
     ReactiveFormsModule,
     RouterModule,
+    ToastModule,
   ],
+  providers: [MessageService],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
@@ -55,7 +59,7 @@ export class LoginComponent {
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
     });
   }
 
