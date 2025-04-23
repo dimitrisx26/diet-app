@@ -26,7 +26,7 @@ export class AuthComponent {
    * Initialize component.
    */
   ngOnInit() {
-    if (this.auth.isAuthenticated) {
+    if (this.auth.isAuthenticated()) {
       this.router.navigate(['/profile']);
     }
   }

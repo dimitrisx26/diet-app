@@ -37,10 +37,10 @@ export class MenuComponent implements OnInit {
    * Sets the admin state based on the logged-in user.
    */
   async setAdminState() {
-    if (!this.auth.loggedInUser) {
+    if (!this.auth.loggedInUser()) {
       await this.auth.checkAuth();
     }
-    this.isAdmin = this.auth.loggedInUser?.$id === 'admin';
+    this.isAdmin = this.auth.isAdmin();
   }
 
   /**

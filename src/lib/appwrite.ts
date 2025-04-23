@@ -1,4 +1,4 @@
-import { Client, Account } from 'appwrite';
+import { Client, Account, Teams } from 'appwrite';
 
 export const client = new Client();
 
@@ -7,4 +7,5 @@ client
   .setProject('diet-assist');
 
 export const account = new Account(client);
+export const teams = new Teams(client);
 export { ID } from 'appwrite';

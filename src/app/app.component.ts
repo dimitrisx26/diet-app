@@ -17,7 +17,7 @@ export class AppComponent {
    * @returns true if the user is authenticated, false otherwise
    */
   get isAuthenticated(): boolean {
-    return this.auth.isAuthenticated;
+    return this.auth.isAuthenticated();
   }
 
   /**

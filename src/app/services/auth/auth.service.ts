@@ -1,24 +1,21 @@
-import { Injectable } from '@angular/core';
-import { account, ID } from '../../../lib/appwrite';
+import { Injectable, Signal, signal } from '@angular/core';
+import { account, client, ID, teams } from '../../../lib/appwrite';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   /** Auth state of the app */
-  isAuthenticated: boolean = false;
+  isAuthenticated = signal<boolean>(false);
 
   /** User object */
-  loggedInUser: any = null;
+  loggedInUser = signal<any>(null);
 
-  /** User email */
-  email: string = '';
+  /** Users teams */
+  userTeams = signal<any[]>([]);
 
-  /** User password */
-  password: string = '';
-
-  /** User name */
-  name: string = '';
+  /** Prevents duplicate checkAuth calls */
+  private authCheckPromise: Promise<void> | null = null;
 
   constructor() {
     this.checkAuth();
@@ -28,10 +25,24 @@ export class AuthService {
    * Checks if the user is authenticated
    */
   async checkAuth() {
-    this.isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
-    if (this.isAuthenticated) {
-      this.loggedInUser = await account.get();
-    }
+    if (this.loggedInUser()) return;
+    if (this.authCheckPromise) return this.authCheckPromise;
+
+    this.authCheckPromise = (async () => {
+      const isAuth = localStorage.getItem('isAuthenticated') === 'true';
+      this.isAuthenticated.set(isAuth);
+
+      if (isAuth) {
+        this.loggedInUser.set(await account.get());
+        const teamList = await teams.list();
+        this.userTeams.set(teamList.teams || []);
+      } else {
+        await this.logout();
+      }
+    })();
+
+    await this.authCheckPromise;
+    this.authCheckPromise = null;
   }
 
   /**
@@ -41,9 +52,11 @@ export class AuthService {
    */
   async login(email: string, password: string) {
     await account.createEmailPasswordSession(email, password);
+    this.loggedInUser.set(await account.get());
+    this.isAuthenticated.set(true);
 
-    this.loggedInUser = await account.get();
-    this.isAuthenticated = true;
+    const teamList = await teams.list();
+    this.userTeams.set(teamList.teams || []);
 
     localStorage.setItem('isAuthenticated', 'true');
   }
@@ -56,7 +69,7 @@ export class AuthService {
    */
   async register(email: string, password: string, name: string) {
     await account.create(ID.unique(), email, password, name);
-    this.login(email, password);
+    await this.login(email, password);
   }
 
   /**
@@ -64,9 +77,15 @@ export class AuthService {
    */
   async logout() {
     await account.deleteSession('current');
-    this.loggedInUser = null;
-    this.isAuthenticated = false;
+    this.loggedInUser.set(null);
+    this.isAuthenticated.set(false);
+    this.userTeams.set([]);
 
     localStorage.removeItem('isAuthenticated');
+  }
+
+  /** Checks if the user is an admin */
+  isAdmin(): boolean {
+    return this.userTeams().some((team: any) => team.name === 'admin');
   }
 }
