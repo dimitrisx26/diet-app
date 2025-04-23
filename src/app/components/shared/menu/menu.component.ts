@@ -4,10 +4,14 @@ import { Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { AuthService } from '../../../services/auth/auth.service';
+import { AvatarModule } from 'primeng/avatar';
+import { AvatarGroupModule } from 'primeng/avatargroup';
+import { OverlayBadgeModule } from 'primeng/overlaybadge';
+
 
 @Component({
   selector: 'app-menu',
-  imports: [CommonModule, ButtonModule, CardModule, RouterModule],
+  imports: [AvatarModule, AvatarGroupModule, CommonModule, ButtonModule, CardModule, OverlayBadgeModule, RouterModule],
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.css',
 })
@@ -16,6 +20,9 @@ export class MenuComponent implements OnInit {
    * The state of the application
    */
   isAdmin: boolean = false;
+
+  /** The user */
+  user: any = null;
 
   /**
    * @param auth Service to handle authentication
@@ -30,17 +37,44 @@ export class MenuComponent implements OnInit {
 
   /** Initializes the component */
   ngOnInit() {
-    this.setAdminState();
+    this.getUser();
   }
 
   /**
-   * Sets the admin state based on the logged-in user.
+   * Gets the current user and sets the admin state.
    */
-  async setAdminState() {
+  getUser() {
     if (!this.auth.loggedInUser()) {
-      await this.auth.checkAuth();
+      this.auth.checkAuth();
     }
     this.isAdmin = this.auth.isAdmin();
+    this.user = this.auth.loggedInUser();
+  }
+
+  /**
+   * Gets the initials of the user.
+   * @param name The name of the user
+   * @returns 
+   */
+  getInitials(name: string): string {
+    if (!name) return '';
+    const parts = name.trim().split(' ');
+    if (parts.length === 1) return parts[0][0].toUpperCase();
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  }
+
+  /**
+   * Gets the color based on the user's name.
+   * @param name The name of the user
+   * @returns 
+   */
+  getColor(name: string): string {
+    let hash = 0;
+    for (let i = 0; i < name.length; i++) {
+      hash = name.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const color = `hsl(${hash % 360}, 60%, 70%)`;
+    return color;
   }
 
   /**
