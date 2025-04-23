@@ -4,10 +4,11 @@ import { Router, RouterOutlet } from '@angular/router';
 import { MenuComponent } from './components/shared/menu/menu.component';
 import { AuthComponent } from './components/shared/auth/auth.component';
 import { AuthService } from './services/auth/auth.service';
+import { ProgressSpinner } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-root',
-  imports: [AuthComponent, CommonModule, MenuComponent, RouterOutlet],
+  imports: [AuthComponent, CommonModule, MenuComponent, ProgressSpinner, RouterOutlet],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })

@@ -1,9 +1,16 @@
 <div class="h-full flex flex-row max-md:flex-col">
   @if (isAuthenticated) {
-    <app-menu></app-menu>
-    <div class="h-full w-full p-6">
-      <router-outlet></router-outlet>
-    </div>
+    @defer {
+      <app-menu></app-menu>
+      <div class="h-full w-full p-6">
+        <router-outlet></router-outlet>
+      </div>
+    }
+    @placeholder (minimum 700ms) {
+      <div class="h-full w-full flex items-center justify-center">
+        <p-progress-spinner></p-progress-spinner>
+      </div>
+    }
   }
   @else {
     <div class="h-full w-full flex items-center justify-center">
