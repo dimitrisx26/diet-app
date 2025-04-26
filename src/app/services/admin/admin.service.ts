@@ -11,7 +11,7 @@ export class AdminService {
   private apiUrl = 'http://localhost:4000';
 
   /** The cached users */
-  private usersCached$ = this.getUsers().pipe(
+  private users$ = this.getUsers().pipe(
     shareReplay(1),
   );
 
@@ -64,7 +64,7 @@ export class AdminService {
    * @returns An observable containing the list of admins.
    */
   loadAdmins() {
-    return this.usersCached$.pipe(
+    return this.users$.pipe(
       map((users) => users.filter((user: any) => user.prefs?.admin === 'true')),
       catchError(() => {
         this.toast.add({
@@ -82,7 +82,7 @@ export class AdminService {
    * @returns An observable containing the list of users.
    */
   loadUsers() {
-    return this.usersCached$.pipe(
+    return this.users$.pipe(
       map((users) => users.filter((user: any) => user.prefs?.admin !== 'true')),
       catchError(() => {
         this.toast.add({
