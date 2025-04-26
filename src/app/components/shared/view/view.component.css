@@ -14,3 +14,18 @@ header {
     font-size: 2rem;
     font-weight: bold;
 }
+
+.view div {
+    overflow: scroll;
+}
+
+@media (max-width: 767px) {
+    .view {
+        height: calc(100dvh - 7rem);
+        padding: 0.5rem;
+    }
+
+    header {
+        font-size: 1.5rem;
+    }
+}

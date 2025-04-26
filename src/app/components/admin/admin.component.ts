@@ -3,38 +3,58 @@ import { ViewComponent } from '../shared/view/view.component';
 import { PanelModule } from 'primeng/panel';
 import { AdminService } from '../../services/admin/admin.service';
 import { ToastModule } from 'primeng/toast';
+import { ButtonModule } from 'primeng/button';
+import { AuthService } from '../../services/auth/auth.service';
+import { CommonModule } from '@angular/common';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-admin',
-  imports: [ViewComponent, PanelModule, ToastModule],
+  imports: [
+    ButtonModule,
+    CommonModule,
+    ViewComponent,
+    PanelModule,
+    ToastModule,
+  ],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.css',
 })
 export class AdminComponent {
-  /** The number of users */
-  usersCount: number = 0;
+  /** Admin user */
+  userAdmin = this.auth.loggedInUser();
+
+  /** The list of admins */
+  admins$ = this.admin.loadAdmins();
 
   /** The list of users */
-  usersList: any[] = [];
+  users$ = this.admin.loadUsers();
+
+  recentUsers$ = this.recentlyCreatedUsers();
 
   /**
    * @param admin AdminService instance to handle admin operations
+   * @param auth AuthService instance to handle authentication
    */
   constructor(
     private admin: AdminService,
-  ) {}
-
-  ngOnInit() {
-    this.loadUsers();
-  }
+    private auth: AuthService,
+  ) { }
 
   /**
-   * Load users from the server and update the users count and list.
+   * Fetches the list of users from the server and filters them  to get most recent created.
+   * @returns The number of users created in the last 7 days
    */
-  loadUsers() {
-    this.admin.loadUsers().subscribe((users) => {
-      this.usersCount = users.length;
-      this.usersList = users;
-    });
+  recentlyCreatedUsers() {
+    return this.users$.pipe(
+      map((users) => {        
+        const now = new Date();
+        const sevenDaysAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7, 0, 0, 0, 0);
+        return users.filter((user) => {
+          const createdAt = new Date(user.$createdAt);
+          return createdAt >= sevenDaysAgo;
+        }).length;
+      })
+    );
   }
 }

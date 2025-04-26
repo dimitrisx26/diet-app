@@ -1,27 +1,40 @@
 <app-view header="Dashboard">
-    <div class="p-8 flex flex-col gap-8 w-full">
-        <p-panel [toggleable]="true" class="p-0 w-full">
-            <ng-template pTemplate="header">
-                <div class="text-gray-600">
-                    <span>Info</span>
-                </div>
-            </ng-template>
-            <!-- Panel content goes here -->
-        </p-panel>
-        <p-panel [toggleable]="true" class="p-0 w-full">
-            <ng-template pTemplate="header">
-                <div class="text-gray-600">
-                    <span>Stats</span>
-                </div>
-            </ng-template>
-            <div class="flex flex-col gap-4">
-                <span class="flex flex-col gap-2">
-                    <p>Users: {{ usersCount }}</p>
-                </span>
-
-            </div>
-        </p-panel>
+  <!-- Info Panel -->
+  <p-panel [toggleable]="true" class="w-full p-0">
+    <ng-template pTemplate="header">
+      <div class="text-bold text-gray-600">
+        <span>Info</span>
+      </div>
+    </ng-template>
+    <div class="flex flex-col gap-2">
+      <p>Welcome, {{ userAdmin.name }}!</p>
     </div>
+  </p-panel>
+
+  <!-- Stats Panel -->
+  <p-panel [toggleable]="true" class="w-full p-0">
+    <ng-template pTemplate="header">
+      <div class="text-gray-600">
+        <span>Stats</span>
+      </div>
+    </ng-template>
+    <div class="mt-4 grid grid-cols-1 gap-6 md:grid-cols-3">
+      <div class="flex flex-col items-center rounded-lg bg-green-50 p-4 shadow">
+        <span class="text-2xl font-bold text-green-700">{{ (admins$ | async)?.length }}</span>
+        <span class="text-gray-500">Admins</span>
+      </div>
+      <div class="flex flex-col items-center rounded-lg bg-blue-50 p-4 shadow">
+        <span class="text-2xl font-bold text-blue-700">{{ (users$ | async)?.length }}</span>
+        <span class="text-gray-500">Users</span>
+      </div>
+      <div
+        class="flex flex-col items-center rounded-lg bg-yellow-50 p-4 shadow"
+      >
+        <span class="text-2xl font-bold text-yellow-700">{{ (recentUsers$ | async) }}</span>
+        <span class="text-gray-500">New Signups (7d)</span>
+      </div>
+    </div>
+  </p-panel>
 </app-view>
 
 <p-toast></p-toast>

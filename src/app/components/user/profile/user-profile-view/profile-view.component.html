@@ -1,20 +1,18 @@
 <app-view header="Profile">
-    <div class="p-8 flex flex-col gap-8 w-full">
-        <p-panel [toggleable]="true" class="p-0 w-full">
-            <ng-template pTemplate="header">
-                <div class="text-gray-600">
-                    <span>User Info</span>
-                </div>
-            </ng-template>
-            <!-- Panel content goes here -->
-        </p-panel>
-        <p-panel [toggleable]="true" class="p-0 w-full">
-            <ng-template pTemplate="header">
-                <div class="text-gray-600">
-                    <span>Details</span>
-                </div>
-            </ng-template>
-            <!-- Panel content goes here -->
-        </p-panel>
-    </div>
+  <p-panel [toggleable]="true" class="w-full p-0">
+    <ng-template pTemplate="header">
+      <div class="text-gray-600">
+        <span>User Info</span>
+      </div>
+    </ng-template>
+    <!-- Panel content goes here -->
+  </p-panel>
+  <p-panel [toggleable]="true" class="w-full p-0">
+    <ng-template pTemplate="header">
+      <div class="text-gray-600">
+        <span>Details</span>
+      </div>
+    </ng-template>
+    <!-- Panel content goes here -->
+  </p-panel>
 </app-view>

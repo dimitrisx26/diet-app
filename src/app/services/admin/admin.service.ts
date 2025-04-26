@@ -1,13 +1,19 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MessageService } from 'primeng/api';
-import { catchError, map, of } from 'rxjs';
+import { catchError, map, of, shareReplay } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AdminService {
+  /** API url */
   private apiUrl = 'http://localhost:4000';
+
+  /** The cached users */
+  private usersCached$ = this.getUsers().pipe(
+    shareReplay(1),
+  );
 
   /**
    * @param http HttpClient instance to make HTTP requests
@@ -54,10 +60,29 @@ export class AdminService {
   }
 
   /**
+   * Load admins from the server.
+   * @returns An observable containing the list of admins.
+   */
+  loadAdmins() {
+    return this.usersCached$.pipe(
+      map((users) => users.filter((user: any) => user.prefs?.admin === 'true')),
+      catchError(() => {
+        this.toast.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed to load admins.',
+        });
+        return of([]);
+      }),
+    );
+  }
+
+  /**
    * Load users from the server.
+   * @returns An observable containing the list of users.
    */
   loadUsers() {
-    return this.getUsers().pipe(
+    return this.usersCached$.pipe(
       map((users) => users.filter((user: any) => user.prefs?.admin !== 'true')),
       catchError(() => {
         this.toast.add({
