@@ -6,7 +6,6 @@ import { CardModule } from 'primeng/card';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../../../services/auth/auth.service';
-import { MessageService } from 'primeng/api';
 import { CommonModule } from '@angular/common';
 import {
   FormBuilder,
@@ -15,6 +14,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-login',
@@ -29,7 +29,6 @@ import { ToastModule } from 'primeng/toast';
     RouterModule,
     ToastModule,
   ],
-  providers: [MessageService],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })

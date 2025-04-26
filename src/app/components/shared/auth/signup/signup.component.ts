@@ -22,7 +22,6 @@ import { ToastModule } from 'primeng/toast';
     RouterModule,
     ToastModule
   ],
-  providers: [MessageService],
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.css',
 })

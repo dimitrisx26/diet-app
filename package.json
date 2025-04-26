@@ -21,6 +21,8 @@
     "@primeng/themes": "^19.1.0",
     "@tailwindcss/postcss": "^4.1.4",
     "appwrite": "^14.0.1",
+    "dotenv": "^16.5.0",
+    "node-appwrite": "^16.0.0",
     "postcss": "^8.5.3",
     "primeicons": "^7.0.0",
     "primeng": "^19.1.0",

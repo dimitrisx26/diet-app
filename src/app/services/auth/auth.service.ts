@@ -1,5 +1,5 @@
-import { Injectable, Signal, signal } from '@angular/core';
-import { account, client, ID, teams } from '../../../lib/appwrite';
+import { Injectable, signal } from '@angular/core';
+import { account, ID, teams } from '../../../lib/appwrite';
 
 @Injectable({
   providedIn: 'root',
@@ -10,9 +10,6 @@ export class AuthService {
 
   /** User object */
   loggedInUser = signal<any>(null);
-
-  /** Users teams */
-  userTeams = signal<any[]>([]);
 
   /** Prevents duplicate checkAuth calls */
   private authCheckPromise: Promise<void> | null = null;
@@ -34,8 +31,6 @@ export class AuthService {
 
       if (isAuth) {
         this.loggedInUser.set(await account.get());
-        const teamList = await teams.list();
-        this.userTeams.set(teamList.teams || []);
       } else {
         await this.logout();
       }
@@ -54,9 +49,6 @@ export class AuthService {
     await account.createEmailPasswordSession(email, password);
     this.loggedInUser.set(await account.get());
     this.isAuthenticated.set(true);
-
-    const teamList = await teams.list();
-    this.userTeams.set(teamList.teams || []);
 
     localStorage.setItem('isAuthenticated', 'true');
   }
@@ -79,13 +71,12 @@ export class AuthService {
     await account.deleteSession('current');
     this.loggedInUser.set(null);
     this.isAuthenticated.set(false);
-    this.userTeams.set([]);
 
     localStorage.removeItem('isAuthenticated');
   }
 
   /** Checks if the user is an admin */
   isAdmin(): boolean {
-    return this.userTeams().some((team: any) => team.name === 'admin');
+    return this.loggedInUser().prefs.admin === 'true';
   }
 }

@@ -6,11 +6,15 @@ import { providePrimeNG } from 'primeng/config';
 import { routes } from './app.routes';
 
 import Aura from '@primeng/themes/aura';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { MessageService } from 'primeng/api';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
+    MessageService,
     provideAnimationsAsync(),
+    provideHttpClient(withInterceptorsFromDi()),
     providePrimeNG({
       theme: {
         preset: Aura,
