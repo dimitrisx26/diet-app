@@ -81,9 +81,9 @@
             <p-avatar
               class="flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold"
               size="normal"
-              [label]="getInitials(user.name)"
+              [label]="getInitials(user.user_metadata.name)"
               [style]="{
-                background: getColor(user.name),
+                background: getColor(user.user_metadata.name),
                 color: '#222',
               }"
             />
@@ -91,15 +91,19 @@
         } @else {
           <p-avatar
             class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full text-sm font-bold"
-            [label]="getInitials(user.name)"
+            [label]="getInitials(user.user_metadata.name)"
             [style]="{
-              background: getColor(user.name),
+              background: getColor(user.user_metadata.name),
               color: '#222',
             }"
           />
         }
         <span class="max-w-[120px] truncate text-wrap align-middle">
-          {{ user.name }}
+          @if (user.user_metadata.name) {
+            {{ user.user_metadata.name }}
+          } @else {
+            {{ user.email }}
+          }
         </span>
       </a>
       <p-button

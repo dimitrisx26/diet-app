@@ -7,7 +7,12 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { AuthService } from '../../../../services/auth/auth.service';
 import { MessageService } from 'primeng/api';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { ToastModule } from 'primeng/toast';
 
 @Component({
@@ -20,7 +25,7 @@ import { ToastModule } from 'primeng/toast';
     InputTextModule,
     ReactiveFormsModule,
     RouterModule,
-    ToastModule
+    ToastModule,
   ],
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.css',
@@ -52,7 +57,14 @@ export class SignupComponent {
   ) {
     this.signupForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(25)]],
+      password: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(8),
+          Validators.maxLength(25),
+        ],
+      ],
       name: ['', [Validators.required, Validators.minLength(3)]],
     });
   }
@@ -66,17 +78,12 @@ export class SignupComponent {
       return;
     }
 
-    const { email, password, name } = this.signupForm.value;
+    let { email, password, name } = this.signupForm.value;
+    email = email.trim();
 
     this.auth
       .register(email, password, name)
       .then(() => {
-        this.toast.add({
-          severity: 'success',
-          summary: 'Signup Successful',
-          detail: `Welcome ${this.auth.loggedInUser.name}`,
-          life: 3000,
-        });
         this.router.navigate(['/profile']);
       })
       .catch((error) => {

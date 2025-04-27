@@ -17,6 +17,7 @@ import { BadgeModule } from 'primeng/badge';
 import { UserService } from '../../../../services/user/user.service';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
   selector: 'app-profile-view',
@@ -25,6 +26,7 @@ import { ToastModule } from 'primeng/toast';
     ButtonModule,
     CommonModule,
     FormsModule,
+    InputTextModule,
     ReactiveFormsModule,
     ViewComponent,
     PanelModule,
@@ -65,7 +67,7 @@ export class ProfileViewComponent {
 
     this.profileForm = this.fb.group({
       name: [
-        this.user?.name || '',
+        this.user?.user_metadata.name || '',
         [
           Validators.required,
           Validators.minLength(3),
@@ -73,6 +75,12 @@ export class ProfileViewComponent {
         ],
       ],
       email: [this.user?.email || '', [Validators.required, Validators.email]],
+      phone: [
+        this.user?.phone || '',
+        [
+          Validators.pattern(/^(\+30|0030|30)?6\d{9}$/),
+        ],
+      ],
     });
   }
 
@@ -105,8 +113,12 @@ export class ProfileViewComponent {
 
     const updatedUser = {
       ...this.user,
-      name: this.profileForm.value.name,
+      user_metadata: {
+        ...this.user.user_metadata,
+        name: this.profileForm.value.name,
+      },
       email: this.profileForm.value.email,
+      phone: this.profileForm.value.phone,
     };
 
     this.userService.updateUser(this.user.$id, updatedUser).subscribe({

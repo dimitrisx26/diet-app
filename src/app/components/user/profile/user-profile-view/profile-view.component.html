@@ -10,7 +10,7 @@
         <div class="flex flex-col gap-2 overflow-scroll py-2">
           <div class="flex items-center gap-2">
             <strong>Name:</strong>
-            <span>{{ user.name }}</span>
+            <span>{{ user.user_metadata.name }}</span>
           </div>
           <div class="flex items-center gap-2">
             <strong>Email:</strong>
@@ -18,27 +18,54 @@
           </div>
           <div class="flex items-center gap-2">
             <strong>Email Verified:</strong>
-            <ng-container *ngIf="user.emailVerification === true">
+            @if (user.user_metadata.email_verified) {
               <p-badge
                 value="Yes"
                 severity="success"
                 styleClass="text-xs px-2 py-1"
               ></p-badge>
-            </ng-container>
-            <ng-container *ngIf="user.emailVerification === false">
+            } @else {
               <p-badge
                 value="No"
                 severity="danger"
                 styleClass="text-xs px-2 py-1"
               ></p-badge>
-            </ng-container>
+            }
           </div>
           <div class="flex items-center gap-2">
-            <strong>Joined At:</strong>
+            <strong>Phone:</strong>
+            <span>{{ user.user_metadata.phone || "-" }}</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <strong>Phone Verified:</strong>
+            @if (user.user_metadata.phone_verified) {
+              <p-badge
+                value="Yes"
+                severity="success"
+                styleClass="text-xs px-2 py-1"
+              ></p-badge>
+            } @else {
+              <p-badge
+                value="No"
+                severity="danger"
+                styleClass="text-xs px-2 py-1"
+              ></p-badge>
+            }
+          </div>
+          <div class="flex items-center gap-2">
+            <strong>Last Login At:</strong>
             <span>{{
-              user.$createdAt ? (user.$createdAt | date: "dd/MM/yy") : "-"
+              user.last_sign_in_at
+                ? (user.last_sign_in_at | date: "dd/MM/yy")
+                : "-"
             }}</span>
           </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <strong>Joined At:</strong>
+          <span>{{
+            user.created_at ? (user.created_at | date: "dd/MM/yy") : "-"
+          }}</span>
         </div>
       } @else {
         <form
@@ -96,34 +123,24 @@
             </div>
           </div>
           <div class="flex flex-col gap-1">
-            <label class="font-medium text-gray-700">Email Verified</label>
-            <div class="flex items-center gap-2">
-              @if (user.emailVerification) {
-                <p-badge
-                  value="Yes"
-                  severity="success"
-                  styleClass="text-xs px-2 py-1"
-                ></p-badge>
-              } @else {
-                <p-badge
-                  value="No"
-                  severity="danger"
-                  styleClass="text-xs px-2 py-1"
-                ></p-badge>
-              }
-            </div>
-          </div>
-          <div class="flex flex-col gap-1">
-            <label class="font-medium text-gray-700">Joined At</label>
+            <label class="font-medium text-gray-700">Phone</label>
             <input
               pInputText
-              [value]="
-                user.$createdAt ? (user.$createdAt | date: 'dd/MM/yy') : '-'
-              "
-              name="createdAt"
-              class="w-full rounded border border-gray-300 bg-gray-100 px-3 py-2 text-gray-500"
-              readonly
+              formControlName="phone"
+              class="focus:ring-primary-400 w-full rounded border border-gray-300 px-3 py-2 transition focus:outline-none focus:ring-2"
+              [readonly]="isAdmin$"
             />
+            <div
+              *ngIf="
+                profileForm.get('phone')?.touched &&
+                profileForm.get('phone')?.invalid
+              "
+              class="text-xs text-red-500"
+            >
+              <div *ngIf="profileForm.get('phone')?.errors?.['pattern']">
+                Invalid phone number. Format: +306XXXXXXXXX or 69XXXXXXXXX
+              </div>
+            </div>
           </div>
           <div class="flex justify-end">
             <p-button

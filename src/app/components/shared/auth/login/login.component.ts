@@ -55,7 +55,7 @@ export class LoginComponent {
     private auth: AuthService,
     private fb: FormBuilder,
     private toast: MessageService,
-    private router: Router
+    private router: Router,
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -72,7 +72,8 @@ export class LoginComponent {
       return;
     }
 
-    const { email, password } = this.loginForm.value;
+    let { email, password } = this.loginForm.value;
+    email = email.trim();
 
     this.auth
       .login(email, password)

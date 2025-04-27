@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { account, ID, teams } from '../../../lib/appwrite';
+import { SupabaseService } from '../supabase/supabase.service';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +14,7 @@ export class AuthService {
   /** Prevents duplicate checkAuth calls */
   private authCheckPromise: Promise<void> | null = null;
 
-  constructor() {
+  constructor(private supabase: SupabaseService) {
     this.checkAuth();
   }
 
@@ -26,12 +26,16 @@ export class AuthService {
     if (this.authCheckPromise) return this.authCheckPromise;
 
     this.authCheckPromise = (async () => {
-      const isAuth = localStorage.getItem('isAuthenticated') === 'true';
-      this.isAuthenticated.set(isAuth);
-
-      if (isAuth) {
-        this.loggedInUser.set(await account.get());
-      } else {
+      try {
+        const user = await this.supabase.getUser();
+        if (user) {
+          this.loggedInUser.set(user);
+          this.isAuthenticated.set(true);
+          localStorage.setItem('isAuthenticated', 'true');
+        } else {
+          await this.logout();
+        }
+      } catch {
         await this.logout();
       }
     })();
@@ -46,8 +50,8 @@ export class AuthService {
    * @param password the password of the user
    */
   async login(email: string, password: string) {
-    await account.createEmailPasswordSession(email, password);
-    const user = await account.get();
+    const user = await this.supabase.signIn(email, password);
+
     this.loggedInUser.set(user);
     this.isAuthenticated.set(true);
 
@@ -61,15 +65,20 @@ export class AuthService {
    * @param name the name of the user
    */
   async register(email: string, password: string, name: string) {
-    await account.create(ID.unique(), email, password, name);
-    await this.login(email, password);
+    const user = await this.supabase.signUp(email, password, name);
+
+    this.loggedInUser.set(user);
+    this.isAuthenticated.set(true);
+
+    localStorage.setItem('isAuthenticated', 'true');
   }
 
   /**
    * Logout the user
    */
   async logout() {
-    await account.deleteSession('current');
+    await this.supabase.signOut();
+
     this.loggedInUser.set(null);
     this.isAuthenticated.set(false);
 
@@ -78,6 +87,6 @@ export class AuthService {
 
   /** Checks if the user is an admin */
   isAdmin(): boolean {
-    return this.loggedInUser().prefs.admin === 'true';
+    return this.loggedInUser()?.user_metadata?.admin === true;
   }
 }
