@@ -54,5 +54,18 @@
       </div>
     </div>
   </p-panel>
+  
+  <!-- User Growth Chart Panel -->
+  <p-panel [toggleable]="true" class="w-full p-0 mt-4">
+    <ng-template pTemplate="header">
+      <div class="text-gray-600">
+        <span>User Growth</span>
+      </div>
+    </ng-template>
+    <div class="p-4">
+      <p-chart class="min-w-full" type="line" [data]="userGrowthChartData" [options]="userGrowthChartOptions"></p-chart>
+    </div>
+  </p-panel>
+  
   <p-toast></p-toast>
 </app-view>
