@@ -1,34 +1,95 @@
 <app-view header="Profile">
-  <p-panel [toggleable]="true" class="w-full overflow-scroll p-0">
+  <p-panel [toggleable]="true" class="w-full p-0">
     <ng-template pTemplate="header">
       <div class="text-gray-600">
-        <span>User Info</span>
+        <span>Summary</span>
       </div>
     </ng-template>
     @if (user) {
       @if (isAdmin$) {
-        <div class="py-2"><strong>Name:</strong> {{ user.name }}</div>
-        <div class="py-2"><strong>Email:</strong> {{ user.email }}</div>
+        <div class="flex flex-col gap-2 overflow-scroll py-2">
+          <div class="flex items-center gap-2">
+            <strong>Name:</strong>
+            <span>{{ user.name }}</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <strong>Email:</strong>
+            <span>{{ user.email }}</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <strong>Email Verified:</strong>
+            <ng-container *ngIf="user.emailVerification === true">
+              <p-badge
+                value="Yes"
+                severity="success"
+                styleClass="text-xs px-2 py-1"
+              ></p-badge>
+            </ng-container>
+            <ng-container *ngIf="user.emailVerification === false">
+              <p-badge
+                value="No"
+                severity="danger"
+                styleClass="text-xs px-2 py-1"
+              ></p-badge>
+            </ng-container>
+          </div>
+          <div class="flex items-center gap-2">
+            <strong>Joined At:</strong>
+            <span>{{
+              user.$createdAt ? (user.$createdAt | date: "dd/MM/yy") : "-"
+            }}</span>
+          </div>
+        </div>
       } @else {
-        <form class="flex w-full flex-col gap-4">
-          <div>
-            <label class="mb-1 block text-gray-600">Name</label>
+        <form class="flex w-full flex-col gap-6 overflow-scroll">
+          <div class="flex flex-col gap-1">
+            <label class="font-medium text-gray-700">Name</label>
             <input
               pInputText
               [(ngModel)]="user.name"
               name="name"
-              class="w-full"
+              class="focus:ring-primary-400 w-full rounded border border-gray-300 px-3 py-2 transition focus:outline-none focus:ring-2"
               [readonly]="isAdmin$"
             />
           </div>
-          <div>
-            <label class="mb-1 block text-gray-600">Email</label>
+          <div class="flex flex-col gap-1">
+            <label class="font-medium text-gray-700">Email</label>
             <input
               pInputText
               [(ngModel)]="user.email"
               name="email"
-              class="w-full"
+              class="focus:ring-primary-400 w-full rounded border border-gray-300 px-3 py-2 transition focus:outline-none focus:ring-2"
               [readonly]="isAdmin$"
+            />
+          </div>
+          <div class="flex flex-col gap-1">
+            <label class="font-medium text-gray-700">Email Verified</label>
+            <div class="flex items-center gap-2">
+              @if (user.emailVerification) {
+                <p-badge
+                  value="Yes"
+                  severity="success"
+                  styleClass="text-xs px-2 py-1"
+                ></p-badge>
+              } @else {
+                <p-badge
+                  value="No"
+                  severity="danger"
+                  styleClass="text-xs px-2 py-1"
+                ></p-badge>
+              }
+            </div>
+          </div>
+          <div class="flex flex-col gap-1">
+            <label class="font-medium text-gray-700">Joined At</label>
+            <input
+              pInputText
+              [value]="
+                user.$createdAt ? (user.$createdAt | date: 'dd/MM/yy') : '-'
+              "
+              name="createdAt"
+              class="w-full rounded border border-gray-300 bg-gray-100 px-3 py-2 text-gray-500"
+              readonly
             />
           </div>
           <div class="flex justify-end">
@@ -41,14 +102,12 @@
           </div>
         </form>
       }
-    } @else {
-      <p>Loading user...</p>
     }
   </p-panel>
   <p-panel [toggleable]="true" class="w-full p-0">
     <ng-template pTemplate="header">
       <div class="text-gray-600">
-        <span>Details</span>
+        <span>More Info</span>
       </div>
     </ng-template>
     <!-- Panel content goes here -->

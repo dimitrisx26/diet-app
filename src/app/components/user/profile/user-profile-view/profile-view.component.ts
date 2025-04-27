@@ -7,10 +7,12 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../../services/auth/auth.service';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
+import { BadgeModule } from 'primeng/badge';
 
 @Component({
   selector: 'app-profile-view',
   imports: [
+    BadgeModule,
     ButtonModule,
     CommonModule,
     FormsModule,
