@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DividerModule } from 'primeng/divider';
@@ -48,6 +48,7 @@ export class SignupComponent {
     private auth: AuthService,
     private fb: FormBuilder,
     private toast: MessageService,
+    private router: Router,
   ) {
     this.signupForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -76,6 +77,7 @@ export class SignupComponent {
           detail: `Welcome ${this.auth.loggedInUser.name}`,
           life: 3000,
         });
+        this.router.navigate(['/profile']);
       })
       .catch((error) => {
         this.toast.add({

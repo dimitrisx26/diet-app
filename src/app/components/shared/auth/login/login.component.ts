@@ -4,7 +4,7 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { CardModule } from 'primeng/card';
 import { FloatLabelModule } from 'primeng/floatlabel';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../../services/auth/auth.service';
 import { CommonModule } from '@angular/common';
 import {
@@ -55,6 +55,7 @@ export class LoginComponent {
     private auth: AuthService,
     private fb: FormBuilder,
     private toast: MessageService,
+    private router: Router
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -82,6 +83,7 @@ export class LoginComponent {
           detail: `Welcome back ${this.auth.loggedInUser.name}`,
           life: 3000,
         });
+        this.router.navigate(['/profile']);
       })
       .catch((error) => {
         this.toast.add({
