@@ -100,7 +100,7 @@ export const routes: Routes = [
     canActivate: [roleGuard('admin')],
   },
   {
-    path: 'admin/profile/:userId',
+    path: 'admin/user/:userId',
     loadComponent: () =>
       import(
         './components/user/profile/user-profile-view/profile-view.component'

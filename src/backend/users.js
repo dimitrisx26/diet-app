@@ -23,6 +23,15 @@ app.get('/api/users', async (req, res) => {
   }
 });
 
+app.get('/api/users/:id', async (req, res) => {
+  try {
+    const user = await users.get(req.params.id);
+    res.json(user);
+  } catch (err) {
+    res.status(404).json({ error: 'User not found' });
+  }
+});
+
 app.listen(4000, () => {
   console.log('Backend running on http://localhost:4000');
 });

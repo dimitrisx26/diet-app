@@ -1,11 +1,49 @@
 <app-view header="Profile">
-  <p-panel [toggleable]="true" class="w-full p-0">
+  <p-panel [toggleable]="true" class="w-full overflow-scroll p-0">
     <ng-template pTemplate="header">
       <div class="text-gray-600">
         <span>User Info</span>
       </div>
     </ng-template>
-    <!-- Panel content goes here -->
+    @if (user) {
+      @if (isAdmin$) {
+        <div class="py-2"><strong>Name:</strong> {{ user.name }}</div>
+        <div class="py-2"><strong>Email:</strong> {{ user.email }}</div>
+      } @else {
+        <form class="flex w-full flex-col gap-4">
+          <div>
+            <label class="mb-1 block text-gray-600">Name</label>
+            <input
+              pInputText
+              [(ngModel)]="user.name"
+              name="name"
+              class="w-full"
+              [readonly]="isAdmin$"
+            />
+          </div>
+          <div>
+            <label class="mb-1 block text-gray-600">Email</label>
+            <input
+              pInputText
+              [(ngModel)]="user.email"
+              name="email"
+              class="w-full"
+              [readonly]="isAdmin$"
+            />
+          </div>
+          <div class="flex justify-end">
+            <p-button
+              type="button"
+              label="Save"
+              icon="pi pi-save"
+              class="p-button-success"
+            ></p-button>
+          </div>
+        </form>
+      }
+    } @else {
+      <p>Loading user...</p>
+    }
   </p-panel>
   <p-panel [toggleable]="true" class="w-full p-0">
     <ng-template pTemplate="header">

@@ -42,15 +42,6 @@ export class AdminService {
   }
 
   /**
-   * Update user on the server.
-   * @param user The user data to create.
-   * @returns An observable containing the created user.
-   */
-  updateUser(id: string, user: any) {
-    return this.http.put<any>(`${this.apiUrl}/api/users/${id}`, user);
-  }
-
-  /**
    * Delete a user by ID from the server.
    * @param id The ID of the user to delete.
    * @returns
