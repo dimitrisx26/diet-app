@@ -47,7 +47,8 @@ export class AuthService {
    */
   async login(email: string, password: string) {
     await account.createEmailPasswordSession(email, password);
-    this.loggedInUser.set(await account.get());
+    const user = await account.get();
+    this.loggedInUser.set(user);
     this.isAuthenticated.set(true);
 
     localStorage.setItem('isAuthenticated', 'true');

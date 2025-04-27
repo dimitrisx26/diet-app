@@ -1,8 +1,8 @@
 <app-view header="Dashboard">
   <!-- Info Panel -->
-  <p-panel [toggleable]="true" class="w-full p-0">
+  <p-panel [toggleable]="true" class="w-full p-0 mb-4">
     <ng-template pTemplate="header">
-      <div class="text-bold text-gray-600">
+      <div class="font-bold text-gray-600">
         <span>Info</span>
       </div>
     </ng-template>
@@ -19,6 +19,7 @@
       </div>
     </ng-template>
     <div class="mt-4 grid grid-cols-1 gap-6 md:grid-cols-3">
+      <!-- Admins Card -->
       <div class="flex flex-col items-center rounded-lg bg-green-50 p-4 shadow">
         <span class="text-2xl font-bold text-green-700">
           @if (admins$ | async) {
@@ -27,8 +28,9 @@
             <span class="pi pi-spin pi-spinner text-xl text-gray-400"></span>
           }
         </span>
-        <span class="text-gray-500">Admins</span>
+        <span class="text-gray-500 mt-2">Admins</span>
       </div>
+      <!-- Users Card -->
       <div class="flex flex-col items-center rounded-lg bg-blue-50 p-4 shadow">
         <span class="text-2xl font-bold text-blue-700">
           @if (users$ | async) {
@@ -37,22 +39,20 @@
             <span class="pi pi-spin pi-spinner text-xl text-gray-400"></span>
           }
         </span>
-        <span class="text-gray-500">Users</span>
+        <span class="text-gray-500 mt-2">Users</span>
       </div>
-      <div
-        class="flex flex-col items-center rounded-lg bg-yellow-50 p-4 shadow"
-      >
+      <!-- New Signups (7d) Card -->
+      <div class="flex flex-col items-center rounded-lg bg-yellow-50 p-4 shadow">
         <span class="text-2xl font-bold text-yellow-700">
           @if (recentUsers$ | async) {
-            {{ (recentUsers$ | async) }}
+            {{ recentUsers$ | async }}
           } @else {
             <span class="pi pi-spin pi-spinner text-xl text-gray-400"></span>
           }
         </span>
-        <span class="text-gray-500">New Signups (7d)</span>
+        <span class="text-gray-500 mt-2">New Signups (7d)</span>
       </div>
     </div>
   </p-panel>
+  <p-toast></p-toast>
 </app-view>
-
-<p-toast></p-toast>
