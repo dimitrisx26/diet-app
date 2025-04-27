@@ -5,103 +5,135 @@
         <span>Summary</span>
       </div>
     </ng-template>
-    @if (user) {
-      @if (isAdmin$) {
-        <div class="flex flex-col gap-2 overflow-scroll py-2">
-          <div class="flex items-center gap-2">
-            <strong>Name:</strong>
-            <span>{{ user.name }}</span>
+    @if (isAdmin$) {
+      <div class="flex flex-col gap-2 overflow-scroll py-2">
+        <div class="flex items-center gap-2">
+          <strong>Name:</strong>
+          <span>{{ user.name }}</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <strong>Email:</strong>
+          <span>{{ user.email }}</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <strong>Email Verified:</strong>
+          <ng-container *ngIf="user.emailVerification === true">
+            <p-badge
+              value="Yes"
+              severity="success"
+              styleClass="text-xs px-2 py-1"
+            ></p-badge>
+          </ng-container>
+          <ng-container *ngIf="user.emailVerification === false">
+            <p-badge
+              value="No"
+              severity="danger"
+              styleClass="text-xs px-2 py-1"
+            ></p-badge>
+          </ng-container>
+        </div>
+        <div class="flex items-center gap-2">
+          <strong>Joined At:</strong>
+          <span>{{
+            user.$createdAt ? (user.$createdAt | date: "dd/MM/yy") : "-"
+          }}</span>
+        </div>
+      </div>
+    } @else {
+      <form
+        [formGroup]="profileForm"
+        (ngSubmit)="onSave()"
+        class="flex w-full flex-col gap-6 overflow-scroll"
+      >
+        <div class="flex flex-col gap-1">
+          <label class="font-medium text-gray-700">Name</label>
+          <input
+            pInputText
+            formControlName="name"
+            class="focus:ring-primary-400 w-full rounded border border-gray-300 px-3 py-2 transition focus:outline-none focus:ring-2"
+            [readonly]="isAdmin$"
+          />
+          <div
+            *ngIf="
+              profileForm.get('name')?.touched &&
+              profileForm.get('name')?.invalid
+            "
+            class="text-xs text-red-500"
+          >
+            <div *ngIf="profileForm.get('name')?.errors?.['required']">
+              Name is required.
+            </div>
+            <div *ngIf="profileForm.get('name')?.errors?.['minlength']">
+              Name must be at least 3 characters.
+            </div>
+            <div *ngIf="profileForm.get('name')?.errors?.['maxlength']">
+              Name must be at most 25 characters.
+            </div>
           </div>
-          <div class="flex items-center gap-2">
-            <strong>Email:</strong>
-            <span>{{ user.email }}</span>
+        </div>
+        <div class="flex flex-col gap-1">
+          <label class="font-medium text-gray-700">Email</label>
+          <input
+            pInputText
+            formControlName="email"
+            class="focus:ring-primary-400 w-full rounded border border-gray-300 px-3 py-2 transition focus:outline-none focus:ring-2"
+            [readonly]="isAdmin$"
+          />
+          <div
+            *ngIf="
+              profileForm.get('email')?.touched &&
+              profileForm.get('email')?.invalid
+            "
+            class="text-xs text-red-500"
+          >
+            <div *ngIf="profileForm.get('email')?.errors?.['required']">
+              Email is required.
+            </div>
+            <div *ngIf="profileForm.get('email')?.errors?.['email']">
+              Invalid email address.
+            </div>
           </div>
+        </div>
+        <div class="flex flex-col gap-1">
+          <label class="font-medium text-gray-700">Email Verified</label>
           <div class="flex items-center gap-2">
-            <strong>Email Verified:</strong>
-            <ng-container *ngIf="user.emailVerification === true">
+            @if (user.emailVerification) {
               <p-badge
                 value="Yes"
                 severity="success"
                 styleClass="text-xs px-2 py-1"
               ></p-badge>
-            </ng-container>
-            <ng-container *ngIf="user.emailVerification === false">
+            } @else {
               <p-badge
                 value="No"
                 severity="danger"
                 styleClass="text-xs px-2 py-1"
               ></p-badge>
-            </ng-container>
-          </div>
-          <div class="flex items-center gap-2">
-            <strong>Joined At:</strong>
-            <span>{{
-              user.$createdAt ? (user.$createdAt | date: "dd/MM/yy") : "-"
-            }}</span>
+            }
           </div>
         </div>
-      } @else {
-        <form class="flex w-full flex-col gap-6 overflow-scroll">
-          <div class="flex flex-col gap-1">
-            <label class="font-medium text-gray-700">Name</label>
-            <input
-              pInputText
-              [(ngModel)]="user.name"
-              name="name"
-              class="focus:ring-primary-400 w-full rounded border border-gray-300 px-3 py-2 transition focus:outline-none focus:ring-2"
-              [readonly]="isAdmin$"
-            />
-          </div>
-          <div class="flex flex-col gap-1">
-            <label class="font-medium text-gray-700">Email</label>
-            <input
-              pInputText
-              [(ngModel)]="user.email"
-              name="email"
-              class="focus:ring-primary-400 w-full rounded border border-gray-300 px-3 py-2 transition focus:outline-none focus:ring-2"
-              [readonly]="isAdmin$"
-            />
-          </div>
-          <div class="flex flex-col gap-1">
-            <label class="font-medium text-gray-700">Email Verified</label>
-            <div class="flex items-center gap-2">
-              @if (user.emailVerification) {
-                <p-badge
-                  value="Yes"
-                  severity="success"
-                  styleClass="text-xs px-2 py-1"
-                ></p-badge>
-              } @else {
-                <p-badge
-                  value="No"
-                  severity="danger"
-                  styleClass="text-xs px-2 py-1"
-                ></p-badge>
-              }
-            </div>
-          </div>
-          <div class="flex flex-col gap-1">
-            <label class="font-medium text-gray-700">Joined At</label>
-            <input
-              pInputText
-              [value]="
-                user.$createdAt ? (user.$createdAt | date: 'dd/MM/yy') : '-'
-              "
-              name="createdAt"
-              class="w-full rounded border border-gray-300 bg-gray-100 px-3 py-2 text-gray-500"
-              readonly
-            />
-          </div>
-          <div class="flex justify-end">
-            <p-button
-              type="button"
-              label="Save"
-              icon="pi pi-save"
-              class="p-button-success"
-            ></p-button>
-          </div>
-        </form>
-      }
+        <div class="flex flex-col gap-1">
+          <label class="font-medium text-gray-700">Joined At</label>
+          <input
+            pInputText
+            [value]="
+              user.$createdAt ? (user.$createdAt | date: 'dd/MM/yy') : '-'
+            "
+            name="createdAt"
+            class="w-full rounded border border-gray-300 bg-gray-100 px-3 py-2 text-gray-500"
+            readonly
+          />
+        </div>
+        <div class="flex justify-end">
+          <p-button
+            type="submit"
+            label="Save"
+            icon="pi pi-save"
+            class="p-button-success"
+            [disabled]="profileForm.invalid || profileForm.pristine"
+          ></p-button>
+        </div>
+      </form>
     }
   </p-panel>
   <p-panel [toggleable]="true" class="w-full p-0">
@@ -113,3 +145,6 @@
     <!-- Panel content goes here -->
   </p-panel>
 </app-view>
+
+
+<p-toast></p-toast>
