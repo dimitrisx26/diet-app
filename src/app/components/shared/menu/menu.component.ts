@@ -43,11 +43,11 @@ export class MenuComponent implements OnInit {
   /**
    * Gets the current user and sets the admin state.
    */
-  getUser() {
+  async getUser() {
     if (!this.auth.loggedInUser()) {
       this.auth.checkAuth();
     }
-    this.isAdmin = this.auth.isAdmin();
+    this.isAdmin = await this.auth.isAdmin();
     this.user = this.auth.loggedInUser();
   }
 

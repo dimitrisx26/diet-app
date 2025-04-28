@@ -14,6 +14,9 @@ export class AuthService {
   /** Prevents duplicate checkAuth calls */
   private authCheckPromise: Promise<void> | null = null;
 
+  /** Prevents duplicate isAdmin checks */
+  private isAdminPromise: Promise<boolean> | null = null;
+
   constructor(private supabase: SupabaseService) {
     this.checkAuth();
   }
@@ -85,8 +88,49 @@ export class AuthService {
     localStorage.removeItem('isAuthenticated');
   }
 
-  /** Checks if the user is an admin */
-  isAdmin(): boolean {
-    return this.loggedInUser()?.user_metadata?.admin === true;
+  /**
+   * Checks if the user is an admin
+   * @returns Promise that resolves to whether the user is an admin
+   */
+  async isAdmin(): Promise<boolean> {
+    const user = this.loggedInUser();
+    
+    if (!user) return false;
+    
+    if (user._isAdmin !== undefined) {
+      return user._isAdmin;
+    }
+    
+    if (this.isAdminPromise) {
+      return this.isAdminPromise;
+    }
+    
+    this.isAdminPromise = (async () => {
+      try {
+        const { data } = await this.supabase
+          .getSupabase()
+          .from('user_roles')
+          .select('is_admin')
+          .eq('user_id', user.id)
+          .single();
+        
+        const isAdmin = data?.is_admin || false;
+        
+        this.loggedInUser.update(currentUser => 
+          currentUser ? {...currentUser, _isAdmin: isAdmin} : currentUser
+        );
+        
+        return isAdmin;
+      } catch {
+        this.loggedInUser.update(currentUser => 
+          currentUser ? {...currentUser, _isAdmin: false} : currentUser
+        );
+        return false;
+      } finally {
+        this.isAdminPromise = null;
+      }
+    })();
+    
+    return this.isAdminPromise;
   }
 }

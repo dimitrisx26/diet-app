@@ -94,4 +94,11 @@ export class SupabaseService {
     if (error) throw error;
     return data;
   }
+
+  /**
+   * @returns The supabase client
+   */
+  getSupabase() {
+    return this.supabase;
+  }
 }

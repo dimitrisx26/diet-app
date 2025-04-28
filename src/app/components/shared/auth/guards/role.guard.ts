@@ -1,22 +1,32 @@
-import { CanActivateFn } from '@angular/router';
-import { inject } from '@angular/core';
-import { AuthService } from '../../../../services/auth/auth.service';
+import { inject } from "@angular/core";
+import { CanActivateFn, Router } from "@angular/router";
+import { AuthService } from "../../../../services/auth/auth.service";
 
 export function roleGuard(requiredRole: 'admin' | ''): CanActivateFn {
   return async (route, state) => {
     const auth = inject(AuthService);
-
+    const router = inject(Router);
+    
+    const url = state.url;
+    
+    if (requiredRole === 'admin' && url.includes('/admin')) {
+      return true;
+    }
+    
+    if (requiredRole === '' && (url === '/profile' || !url.includes('/admin'))) {
+      return true;
+    }
+    
     await auth.checkAuth();
-
-    const isAdmin = auth.isAdmin();
-
+    const isAdmin = await auth.isAdmin();
+    
     if (requiredRole === 'admin' && !isAdmin) {
-      window.location.href = '/profile';
+      router.navigate(['/profile']);
       return false;
     }
 
     if (requiredRole === '' && isAdmin) {
-      window.location.href = '/admin';
+      router.navigate(['/admin']);
       return false;
     }
 

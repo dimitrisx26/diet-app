@@ -37,8 +37,9 @@ import { InputTextModule } from 'primeng/inputtext';
 })
 export class ProfileViewComponent {
   /** The user's admin state */
-  isAdmin$ = this.auth.isAdmin();
+  isAdmin: boolean = false;
 
+  /** The form group for the profile form */
   profileForm!: FormGroup;
 
   /** The user's data */
@@ -62,7 +63,8 @@ export class ProfileViewComponent {
   }
 
   /** Initializes the component */
-  ngOnInit() {
+  async ngOnInit() {
+    this.isAdmin = await this.auth.isAdmin();
     this.loadUser();
 
     this.profileForm = this.fb.group({
@@ -77,9 +79,7 @@ export class ProfileViewComponent {
       email: [this.user?.email || '', [Validators.required, Validators.email]],
       phone: [
         this.user?.phone || '',
-        [
-          Validators.pattern(/^(\+30|0030|30)?6\d{9}$/),
-        ],
+        [Validators.pattern(/^(\+30|0030|30)?6\d{9}$/)],
       ],
     });
   }
@@ -89,7 +89,7 @@ export class ProfileViewComponent {
    */
   loadUser() {
     if (this.user) return;
-    if (this.isAdmin$) {
+    if (this.isAdmin) {
       const userId = this.route.snapshot.paramMap.get('userId');
       this.admin.getUserById(userId!).subscribe({
         next: (user) => (this.user = user),
