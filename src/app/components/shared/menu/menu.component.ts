@@ -3,70 +3,71 @@ import { Component, ElementRef, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
-import { AuthService } from '../../../services/auth/auth.service';
 import { AvatarModule } from 'primeng/avatar';
 import { AvatarGroupModule } from 'primeng/avatargroup';
 import { OverlayBadgeModule } from 'primeng/overlaybadge';
-
+import { AuthStore } from '../../../store/auth.store';
 
 @Component({
   selector: 'app-menu',
-  imports: [AvatarModule, AvatarGroupModule, CommonModule, ButtonModule, CardModule, OverlayBadgeModule, RouterModule],
+  imports: [
+    AvatarModule,
+    AvatarGroupModule,
+    CommonModule,
+    ButtonModule,
+    CardModule,
+    OverlayBadgeModule,
+    RouterModule,
+  ],
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.css',
 })
-export class MenuComponent implements OnInit {
+export class MenuComponent {
+  /**
+   * The admin state of the user
+   */
+  get isAdmin() {
+    return this.authStore.isAdmin();
+  }
+
   /**
    * The state of the application
    */
-  isAdmin: boolean = false;
+  get isAuthenticated() {
+    return this.authStore.isAuthenticated();
+  }
 
-  /** The user */
-  user: any = null;
+  get user() {
+    return this.authStore.user();
+  }
 
   /**
-   * @param auth Service to handle authentication
-   * @param el ElementRef
-   * @param router Router to navigate
+   * @param authStore AuthStore instance to manage authentication state
+   * @param el ElementRef to access the DOM element
    */
   constructor(
-    private auth: AuthService,
+    private authStore: AuthStore,
     private el: ElementRef,
-    private router: Router,
   ) {}
-
-  /** Initializes the component */
-  ngOnInit() {
-    this.getUser();
-  }
-
-  /**
-   * Gets the current user and sets the admin state.
-   */
-  async getUser() {
-    if (!this.auth.loggedInUser()) {
-      this.auth.checkAuth();
-    }
-    this.isAdmin = await this.auth.isAdmin();
-    this.user = this.auth.loggedInUser();
-  }
 
   /**
    * Gets the initials of the user.
    * @param name The name of the user
-   * @returns 
+   * @returns
    */
   getInitials(name: string): string {
     if (!name) return '';
-    const parts = name.trim().split(' ');
-    if (parts.length === 1) return parts[0][0].toUpperCase();
-    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    return name
+      .split(' ')
+      .map((n) => n.charAt(0))
+      .join('')
+      .toUpperCase();
   }
 
   /**
    * Gets the color based on the user's name.
    * @param name The name of the user
-   * @returns 
+   * @returns
    */
   getColor(name: string): string {
     if (!name || typeof name !== 'string' || name.length === 0) {
@@ -136,9 +137,7 @@ export class MenuComponent implements OnInit {
   /**
    * Signs out the user and redirects to the login page.
    */
-  signOut() {
-    this.auth.logout().then(() => {
-      this.router.navigate(['/auth']);
-    });
+  logout() {
+    this.authStore.logout();
   }
 }

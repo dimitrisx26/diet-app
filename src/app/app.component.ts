@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
+import { Component, Signal } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 import { MenuComponent } from './components/shared/menu/menu.component';
 import { AuthComponent } from './components/shared/auth/auth.component';
-import { AuthService } from './services/auth/auth.service';
 import { ProgressSpinner } from 'primeng/progressspinner';
+import { AuthStore } from './store/auth.store';
 
 @Component({
   selector: 'app-root',
@@ -13,29 +13,19 @@ import { ProgressSpinner } from 'primeng/progressspinner';
   styleUrl: './app.component.css',
 })
 export class AppComponent {
-  /**
-   * Getter to check if the user is authenticated
-   * @returns true if the user is authenticated, false otherwise
-   */
-  get isAuthenticated(): boolean {
-    return this.auth.isAuthenticated();
-  }
+  isAdmin: Signal<boolean> = this.authStore.isAdmin;
 
   /**
-   * @param auth AuthService instance to handle authentication
-   * @param router Router service to navigate between routes
+   * @param authStore AuthStore instance to manage authentication state
    */
   constructor(
-    private auth: AuthService,
-    private router: Router,
+    private authStore: AuthStore,
   ) {}
 
   /**
    * Initialize component.
    */
-  ngOnInit() {
-    if (!this.isAuthenticated) {
-      this.router.navigate(['/auth']);
-    }
+  async ngOnInit() {
+    await this.authStore.initAuth();
   }
 }

@@ -4,7 +4,6 @@ import { PanelModule } from 'primeng/panel';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AdminService } from '../../../../services/admin/admin.service';
 import { CommonModule } from '@angular/common';
-import { AuthService } from '../../../../services/auth/auth.service';
 import {
   FormBuilder,
   FormGroup,
@@ -18,6 +17,7 @@ import { UserService } from '../../../../services/user/user.service';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { InputTextModule } from 'primeng/inputtext';
+import { AuthStore } from '../../../../store/auth.store';
 
 @Component({
   selector: 'app-profile-view',
@@ -47,11 +47,16 @@ export class ProfileViewComponent {
 
   /**
    * @param admin AdminService instance to fetch user data
+   * @param authStore AuthStore instance to check admin state
+   * @param fb FormBuilder instance to create reactive forms
+   * @param toast MessageService instance to show toast messages
+   * @param route ActivatedRoute instance to get route parameters
    * @param router Router instance to navigate between routes
+   * @param userService UserService instance to update user data
    */
   constructor(
     private admin: AdminService,
-    private auth: AuthService,
+    private authStore: AuthStore,
     private fb: FormBuilder,
     private toast: MessageService,
     private route: ActivatedRoute,
@@ -64,7 +69,7 @@ export class ProfileViewComponent {
 
   /** Initializes the component */
   async ngOnInit() {
-    this.isAdmin = await this.auth.isAdmin();
+    this.isAdmin = await this.authStore.isAdmin();
     this.loadUser();
 
     this.profileForm = this.fb.group({
@@ -98,7 +103,7 @@ export class ProfileViewComponent {
         },
       });
     } else {
-      this.user = this.auth.loggedInUser();
+      this.user = this.authStore.user();
     }
   }
 

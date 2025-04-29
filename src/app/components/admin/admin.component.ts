@@ -4,10 +4,10 @@ import { PanelModule } from 'primeng/panel';
 import { AdminService } from '../../services/admin/admin.service';
 import { ToastModule } from 'primeng/toast';
 import { ButtonModule } from 'primeng/button';
-import { AuthService } from '../../services/auth/auth.service';
 import { CommonModule } from '@angular/common';
 import { map } from 'rxjs';
 import { ChartModule } from 'primeng/chart';
+import { AuthStore } from '../../store/auth.store';
 
 @Component({
   selector: 'app-admin',
@@ -30,7 +30,7 @@ export class AdminComponent {
   users$ = this.admin.loadUsers();
 
   /** Admin user */
-  userAdmin = this.auth.loggedInUser();
+  userAdmin = this.authStore.user();
 
   /** The list of users created in the last 7 days */
   recentUsers$;
@@ -80,17 +80,18 @@ export class AdminComponent {
 
   constructor(
     private admin: AdminService,
-    private auth: AuthService,
+    private authStore: AuthStore,
   ) {
     this.recentUsers$ = this.recentlyCreatedUsers();
   }
 
   ngOnInit() {
+    this.authStore.initAuth();
     this.usersPerMonth();
   }
 
   /**
-   * Fetches the list of users from the server and filters them  to get most recent created.
+   * Fetches the list of users from the server and filters them to get most recent created.
    * @returns The number of users created in the last 7 days
    */
   recentlyCreatedUsers() {
@@ -136,7 +137,7 @@ export class AdminComponent {
       },
       error: (err) => {
         console.error('Error fetching user growth data:', err);
-      }
+      },
     });
   }
 }

@@ -3,7 +3,7 @@ import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { AuthService } from '../../../services/auth/auth.service';
+import { AuthStore } from '../../../store/auth.store';
 
 @Component({
   selector: 'app-auth',
@@ -18,7 +18,7 @@ export class AuthComponent {
   isLogin: boolean = true;
 
   constructor(
-    private auth: AuthService,
+    private authStore: AuthStore,
     private router: Router,
   ) {}
 
@@ -26,7 +26,7 @@ export class AuthComponent {
    * Initialize component.
    */
   ngOnInit() {
-    if (this.auth.isAuthenticated()) {
+    if (this.authStore.isAuthenticated()) {
       this.router.navigate(['/profile']);
     }
   }

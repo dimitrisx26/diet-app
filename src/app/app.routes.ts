@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { roleGuard } from './components/shared/auth/guards/role.guard';
+import { adminGuard, userGuard } from './components/shared/auth/guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -16,7 +16,7 @@ export const routes: Routes = [
       import(
         './components/user/profile/user-profile-view/profile-view.component'
       ).then((c) => c.ProfileViewComponent),
-    canActivate: [roleGuard('')],
+    canActivate: [userGuard],
   },
   {
     path: 'diet-plan',
@@ -24,7 +24,7 @@ export const routes: Routes = [
       import(
         './components/shared/diet-plan/diet-plan-view/diet-plan-view.component'
       ).then((c) => c.DietPlanViewComponent),
-    canActivate: [roleGuard('')],
+    canActivate: [userGuard],
   },
   {
     path: 'chat',
@@ -32,7 +32,7 @@ export const routes: Routes = [
       import('./components/shared/chat/chat-view/chat-view.component').then(
         (c) => c.ChatViewComponent,
       ),
-    canActivate: [roleGuard('')],
+    canActivate: [userGuard],
   },
   {
     path: 'appointment',
@@ -40,7 +40,7 @@ export const routes: Routes = [
       import(
         './components/user/appointment/appointment-view/appointment-view.component'
       ).then((c) => c.AppointmentViewComponent),
-    canActivate: [roleGuard('')],
+    canActivate: [userGuard],
   },
   // Admin routes
   {
@@ -49,7 +49,7 @@ export const routes: Routes = [
       import('./components/admin/admin.component').then(
         (c) => c.AdminComponent,
       ),
-    canActivate: [roleGuard('admin')],
+    canActivate: [adminGuard],
   },
   {
     path: 'admin/users',
@@ -57,7 +57,7 @@ export const routes: Routes = [
       import('./components/admin/users-list/users-list.component').then(
         (c) => c.UsersListComponent,
       ),
-    canActivate: [roleGuard('admin')],
+    canActivate: [adminGuard],
   },
   {
     path: 'admin/appointments',
@@ -65,7 +65,7 @@ export const routes: Routes = [
       import(
         './components/admin/appointments-list/appointments-list.component'
       ).then((c) => c.AppointmentsListComponent),
-    canActivate: [roleGuard('admin')],
+    canActivate: [adminGuard],
   },
   {
     path: 'admin/chats',
@@ -73,7 +73,7 @@ export const routes: Routes = [
       import('./components/shared/chat/chats-list/chats-list.component').then(
         (c) => c.ChatsListComponent,
       ),
-    canActivate: [roleGuard('admin')],
+    canActivate: [adminGuard],
   },
   {
     path: 'admin/appointment/:userId',
@@ -81,7 +81,7 @@ export const routes: Routes = [
       import(
         './components/user/appointment/appointment-view/appointment-view.component'
       ).then((c) => c.AppointmentViewComponent),
-    canActivate: [roleGuard('admin')],
+    canActivate: [adminGuard],
   },
   {
     path: 'admin/chat/:userId',
@@ -89,7 +89,7 @@ export const routes: Routes = [
       import('./components/shared/chat/chat-view/chat-view.component').then(
         (c) => c.ChatViewComponent,
       ),
-    canActivate: [roleGuard('admin')],
+    canActivate: [adminGuard],
   },
   {
     path: 'admin/diet-plan/:userId',
@@ -97,7 +97,7 @@ export const routes: Routes = [
       import(
         './components/shared/diet-plan/diet-plan-view/diet-plan-view.component'
       ).then((c) => c.DietPlanViewComponent),
-    canActivate: [roleGuard('admin')],
+    canActivate: [adminGuard],
   },
   {
     path: 'admin/user/:userId',
@@ -105,7 +105,7 @@ export const routes: Routes = [
       import(
         './components/user/profile/user-profile-view/profile-view.component'
       ).then((c) => c.ProfileViewComponent),
-    canActivate: [roleGuard('admin')],
+    canActivate: [adminGuard],
   },
   { path: '', redirectTo: '/profile', pathMatch: 'full' },
   { path: '**', redirectTo: '/profile' },

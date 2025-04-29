@@ -1,11 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DividerModule } from 'primeng/divider';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
-import { AuthService } from '../../../../services/auth/auth.service';
 import { MessageService } from 'primeng/api';
 import {
   FormBuilder,
@@ -14,6 +13,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { ToastModule } from 'primeng/toast';
+import { AuthStore } from '../../../../store/auth.store';
 
 @Component({
   selector: 'app-signup',
@@ -41,19 +41,21 @@ export class SignupComponent {
    */
   @Output() isLoginChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
+  /** Loading state */
+  loading: boolean = false;
+
   /** FormGroup instance to manage the signup form */
   signupForm: FormGroup;
 
   /**
-   * @param auth AuthService instance to handle authentication
+   * @param authStore AuthStore instance to manage authentication state
    * @param fb FormBuilder instance to build reactive forms
    * @param toast MessageService instance to show toast messages
    */
   constructor(
-    private auth: AuthService,
+    private authStore: AuthStore,
     private fb: FormBuilder,
     private toast: MessageService,
-    private router: Router,
   ) {
     this.signupForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -80,19 +82,21 @@ export class SignupComponent {
 
     let { email, password, name } = this.signupForm.value;
     email = email.trim();
+    name = name.trim();
+    this.loading = true;
 
-    this.auth
+    this.authStore
       .register(email, password, name)
-      .then(() => {
-        this.router.navigate(['/profile']);
-      })
       .catch((error) => {
         this.toast.add({
           severity: 'error',
-          summary: 'Signup Failed',
-          detail: error.message,
+          summary: 'Registration Failed',
+          detail: error.message || 'An error occurred during registration',
           life: 3000,
         });
+      })
+      .finally(() => {
+        this.loading = false;
       });
   }
 
