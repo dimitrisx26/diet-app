@@ -13,13 +13,11 @@ import { AuthStore } from './store/auth.store';
   styleUrl: './app.component.css',
 })
 export class AppComponent {
-  isAdmin: Signal<boolean> = this.authStore.isAdmin;
-
   /**
    * @param authStore AuthStore instance to manage authentication state
    */
   constructor(
-    private authStore: AuthStore,
+    public authStore: AuthStore,
   ) {}
 
   /**

@@ -130,7 +130,7 @@ export class AuthStore {
         .from('user_roles')
         .select('is_admin')
         .eq('user_id', user.id)
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
 
@@ -144,7 +144,6 @@ export class AuthStore {
       }));
     } catch (error) {
       console.error('Error loading admin status:', error);
-      console.log('here');
       
       this.state.update((state) => ({
         ...state,
