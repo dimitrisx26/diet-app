@@ -1,13 +1,13 @@
 <app-view header="Dashboard">
   <!-- Info Panel -->
-  <p-panel [toggleable]="true" class="w-full p-0 mb-4">
+  <p-panel [toggleable]="true" class="mb-4 w-full p-0">
     <ng-template pTemplate="header">
       <div class="font-bold text-gray-600">
         <span>Info</span>
       </div>
     </ng-template>
     <div class="flex flex-col gap-2">
-      <!-- <p>Welcome, {{ userAdmin.user_metadata.name }}!</p> -->
+      <p>Welcome, {{ userAdmin.user_metadata.name }}!</p>
     </div>
   </p-panel>
 
@@ -22,48 +22,47 @@
       <!-- Admins Card -->
       <div class="flex flex-col items-center rounded-lg bg-green-50 p-4 shadow">
         <span class="text-2xl font-bold text-green-700">
-          @if (true) {
-          } @else {
-            <span class="pi pi-spin pi-spinner text-xl text-gray-400"></span>
-          }
+          {{ adminCount }}
         </span>
-        <span class="text-gray-500 mt-2">Admins</span>
+        <span class="mt-2 text-gray-500">Admins</span>
       </div>
+
       <!-- Users Card -->
       <div class="flex flex-col items-center rounded-lg bg-blue-50 p-4 shadow">
         <span class="text-2xl font-bold text-blue-700">
-          @if (true) {
-          } @else {
-            <span class="pi pi-spin pi-spinner text-xl text-gray-400"></span>
-          }
+          {{ userCount }}
         </span>
-        <span class="text-gray-500 mt-2">Users</span>
+        <span class="mt-2 text-gray-500">Users</span>
       </div>
+
       <!-- New Signups (7d) Card -->
-      <div class="flex flex-col items-center rounded-lg bg-yellow-50 p-4 shadow">
+      <div
+        class="flex flex-col items-center rounded-lg bg-yellow-50 p-4 shadow"
+      >
         <span class="text-2xl font-bold text-yellow-700">
-          @if (true) {
-            <!-- {{ recentUsers$ | async }} -->
-          } @else {
-            <span class="pi pi-spin pi-spinner text-xl text-gray-400"></span>
-          }
+          {{ recentUsers }}
         </span>
-        <span class="text-gray-500 mt-2">New Signups (7d)</span>
+        <span class="mt-2 text-gray-500">New Signups (7d)</span>
       </div>
     </div>
   </p-panel>
-  
+
   <!-- User Growth Chart Panel -->
-  <p-panel [toggleable]="true" class="w-full p-0 mt-4">
+  <p-panel [toggleable]="true" class="mt-4 w-full p-0">
     <ng-template pTemplate="header">
       <div class="text-gray-600">
         <span>User Growth</span>
       </div>
     </ng-template>
     <div class="p-4">
-      <p-chart class="min-w-full" type="line" [data]="userGrowthChartData" [options]="userGrowthChartOptions"></p-chart>
+      <p-chart
+        class="min-w-full"
+        type="line"
+        [data]="userGrowthChartData"
+        [options]="userGrowthChartOptions"
+      ></p-chart>
     </div>
   </p-panel>
-  
+
   <p-toast></p-toast>
 </app-view>

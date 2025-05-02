@@ -99,6 +99,7 @@ export class AuthStore {
         password,
         options: {
           data: { name },
+          emailRedirectTo: `${window.location.origin}/auth`,
         },
       });
       

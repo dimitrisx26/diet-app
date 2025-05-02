@@ -5,7 +5,6 @@ import { AdminService } from '../../services/admin/admin.service';
 import { ToastModule } from 'primeng/toast';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
-import { map } from 'rxjs';
 import { ChartModule } from 'primeng/chart';
 import { AuthStore } from '../../store/auth.store';
 
@@ -23,17 +22,23 @@ import { AuthStore } from '../../store/auth.store';
   styleUrl: './admin.component.css',
 })
 export class AdminComponent {
-  // /** The list of admins */
-  // admins$ = this.admin.loadAdmins();
+  /** The list of admins */
+  admins$: Promise<any[]> | undefined;
 
-  // /** The list of users */
-  // users$ = this.admin.loadUsers();
+  /** The admin count */
+  adminCount: number = 0;
 
-  // /** Admin user */
-  // userAdmin = this.authStore.user();
+  /** The list of users */
+  users$: Promise<any[]> | undefined;
 
-  // /** The list of users created in the last 7 days */
-  // recentUsers$;
+  /** The user count */
+  userCount: number = 0;
+
+  /** Admin user */
+  userAdmin: any;
+
+  /** The list of users created in the last 7 days */
+  recentUsers: number = 0;
 
   /** Chart data for users created */
   userGrowthChartData = {
@@ -54,7 +59,7 @@ export class AdminComponent {
     datasets: [
       {
         label: 'Users',
-        data: [''],
+        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         fill: false,
         borderColor: '#22c55e',
         tension: 0.4,
@@ -78,66 +83,73 @@ export class AdminComponent {
     },
   };
 
-  // constructor(
-  //   private admin: AdminService,
-  //   private authStore: AuthStore,
-  // ) {
-  //   this.recentUsers$ = this.recentlyCreatedUsers();
-  // }
+  constructor(
+    private admin: AdminService,
+    private authStore: AuthStore,
+  ) {}
 
-  // ngOnInit() {
-  //   this.authStore.initAuth();
-  //   this.usersPerMonth();
-  // }
+  ngOnInit() {
+    this.authStore.initAuth();
+    this.loadData();
+  }
 
   /**
-   * Fetches the list of users from the server and filters them to get most recent created.
-   * @returns The number of users created in the last 7 days
+   * Loads all dashboard data
    */
-  // recentlyCreatedUsers() {
-  //   return this.users$.pipe(
-  //     map((users) => {
-  //       const now = new Date();
-  //       const sevenDaysAgo = new Date(
-  //         now.getFullYear(),
-  //         now.getMonth(),
-  //         now.getDate() - 7,
-  //         0,
-  //         0,
-  //         0,
-  //         0,
-  //       );
-  //       return users.filter((user) => {
-  //         const createdAt = new Date(user.$createdAt);
-  //         return createdAt >= sevenDaysAgo;
-  //       }).length;
-  //     }),
-  //   );
-  // }
+  private async loadData() {
+    this.userAdmin = this.authStore.user();
 
-  // usersPerMonth() {
-  //   const usersFiltered = this.users$.pipe(
-  //     map((users) => {
-  //       const now = new Date();
-  //       const monthCounts = Array(12).fill(0);
-  //       users.forEach((user) => {
-  //         const createdAt = new Date(user.$createdAt);
-  //         if (createdAt.getFullYear() === now.getFullYear()) {
-  //           monthCounts[createdAt.getMonth()]++;
-  //         }
-  //       });
-  //       return monthCounts;
-  //     }),
-  //   );
+    this.admins$ = this.admin.getAdminUsers();
+    const admins = await this.admins$;
+    this.adminCount = admins?.length || 0;
 
-  //   return usersFiltered.subscribe({
-  //     next: (users) => {
-  //       this.userGrowthChartData.datasets[0].data = users;
-  //       this.userGrowthChartData = { ...this.userGrowthChartData };
-  //     },
-  //     error: (err) => {
-  //       console.error('Error fetching user growth data:', err);
-  //     },
-  //   });
-  // }
+    this.users$ = this.admin.getClientUsers();
+    const users = await this.users$;
+    this.userCount = users?.length || 0;
+
+    this.recentUsers = await this.calculateRecentUsers(users || []);
+    this.usersPerMonth(users || []);
+  }
+
+  /**
+   * Calculates users created in the last 7 days
+   * @param users Array of users
+   * @returns Number of recently created users
+   */
+  private calculateRecentUsers(users: any[]): number {
+    const now = new Date();
+    const sevenDaysAgo = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate() - 7,
+      0,
+      0,
+      0,
+      0,
+    );
+
+    return users.filter((user) => {
+      const createdAt = new Date(user.created_at);
+      return createdAt >= sevenDaysAgo;
+    }).length;
+  }
+
+  /**
+   * Calculates users per month for charting
+   * @param users Array of users
+   */
+  private usersPerMonth(users: any[]) {
+    const now = new Date();
+    const monthCounts = Array(12).fill(0);
+
+    users.forEach((user) => {
+      const createdAt = new Date(user.created_at);
+      if (createdAt.getFullYear() === now.getFullYear()) {
+        monthCounts[createdAt.getMonth()]++;
+      }
+    });
+
+    this.userGrowthChartData.datasets[0].data = monthCounts;
+    this.userGrowthChartData = { ...this.userGrowthChartData };
+  }
 }
