@@ -94,17 +94,17 @@ export class ProfileViewComponent {
    */
   loadUser() {
     if (this.user) return;
-    if (this.isAdmin) {
-      const userId = this.route.snapshot.paramMap.get('userId');
-      this.admin.getUserById(userId!).subscribe({
-        next: (user) => (this.user = user),
-        error: (err) => {
-          console.error('User not found', err);
-        },
-      });
-    } else {
-      this.user = this.authStore.user();
-    }
+    // if (this.isAdmin) {
+    //   const userId = this.route.snapshot.paramMap.get('userId');
+    //   this.admin.getUserById(userId!).subscribe({
+    //     next: (user) => (this.user = user),
+    //     error: (err) => {
+    //       console.error('User not found', err);
+    //     },
+    //   });
+    // } else {
+    //   this.user = this.authStore.user();
+    // }
   }
 
   /**

@@ -2,7 +2,6 @@
   <div class="h-full w-full overflow-x-auto">
     <p-table
       class="h-full min-w-full rounded-lg shadow-lg"
-      [value]="(filledUsers$ | async) ?? []"
       [paginator]="true"
       [rows]="10"
       [rowsPerPageOptions]="[10, 20, 50, 100]"
@@ -17,8 +16,15 @@
           <th class="px-4 py-3 text-left font-semibold text-gray-700">
             Email Verified
           </th>
+          <th class="px-4 py-3 text-left font-semibold text-gray-700">Phone</th>
           <th class="px-4 py-3 text-left font-semibold text-gray-700">
-            Created At
+            Phone Verified
+          </th>
+          <th class="px-4 py-3 text-left font-semibold text-gray-700">
+            Last Login
+          </th>
+          <th class="px-4 py-3 text-left font-semibold text-gray-700">
+            Joined At
           </th>
         </tr>
       </ng-template>
@@ -28,7 +34,7 @@
           [ngClass]="{ 'opacity-50': user.isPlaceholder }"
         >
           <td class="px-4 py-2">
-            <ng-container *ngIf="!user.isPlaceholder; else emptyCell">
+            @if (!user.isPlaceholder) {
               <a
                 class="font-medium text-blue-600"
                 [routerLink]="['/admin/user', user.$id]"
@@ -38,25 +44,44 @@
               >
                 {{ user.user_metadata.name }}
               </a>
-            </ng-container>
-            <ng-template #emptyCell>&nbsp;</ng-template>
+            } @else {
+              &nbsp;
+            }
           </td>
           <td class="px-4 py-2">{{ user.email }}</td>
           <td class="px-4 py-2">
-            <ng-container *ngIf="user.emailVerification === true">
+            @if (user.emailVerification) {
               <p-badge
                 value="Yes"
                 severity="success"
                 styleClass="text-xs px-2 py-1"
               ></p-badge>
-            </ng-container>
-            <ng-container *ngIf="user.emailVerification === false">
+            } @else {
               <p-badge
                 value="No"
                 severity="danger"
                 styleClass="text-xs px-2 py-1"
               ></p-badge>
-            </ng-container>
+            }
+          </td>
+          <td class="px-4 py-2">{{ user.phone }}</td>
+          <td class="px-4 py-2">
+            @if (user.phoneVerified) {
+              <p-badge
+                value="Yes"
+                severity="success"
+                styleClass="text-xs px-2 py-1"
+              ></p-badge>
+            } @else {
+              <p-badge
+                value="No"
+                severity="danger"
+                styleClass="text-xs px-2 py-1"
+              ></p-badge>
+            }
+          </td>
+          <td class="px-4 py-2">
+            {{ user.last_login ? (user.last_login | date: "dd/MM/yy") : "" }}
           </td>
           <td class="px-4 py-2">
             {{ user.$createdAt ? (user.$createdAt | date: "dd/MM/yy") : "" }}

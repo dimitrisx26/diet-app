@@ -101,8 +101,24 @@ export class AuthStore {
           data: { name },
         },
       });
+      
       if (error) throw error;
+      
       if (data?.user) {
+        try {
+          const { error: roleError } = await this.supabase.getSupabase()
+            .from('user_roles')
+            .insert([
+              { user_id: data.user.id, is_admin: false }
+            ]);
+          
+          if (roleError) console.error('Role creation error:', roleError);
+        } catch (e) {
+          console.error('Error creating role:', e);
+        }
+        
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
         await this.loadUserAdminStatus(data.user);
         this.navigateByRole();
       }
@@ -131,11 +147,27 @@ export class AuthStore {
         .select('is_admin')
         .eq('user_id', user.id)
         .maybeSingle();
-
-      if (error) throw error;
-
+  
+      if (error) {
+        console.error('Error querying user_roles:', error);
+        
+        try {
+          const { error: insertError } = await this.supabase
+            .getSupabase()
+            .from('user_roles')
+            .insert([{ user_id: user.id, is_admin: false }]);
+            
+          if (insertError) {
+            console.error('Failed to create backup role:', insertError);
+            throw new Error('Database error granting user');
+          }
+        } catch (e) {
+          console.error('Error in backup role creation:', e);
+        }
+      }
+  
       const isAdmin = data?.is_admin || false;
-
+  
       this.state.update((state) => ({
         ...state,
         isAuthenticated: true,

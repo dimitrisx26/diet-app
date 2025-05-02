@@ -11,7 +11,7 @@ export class SupabaseService {
   constructor() {
     this.supabase = createClient(
       environment.supabaseUrl,
-      environment.supabaseAnonKey
+      environment.supabaseAnonKey,
     );
   }
 
@@ -72,7 +72,7 @@ export class SupabaseService {
    */
   getAllUsers() {
     return this.supabase
-      .from('users')
+      .from('user_profiles')
       .select('*')
       .then(({ data, error }) => {
         if (error) throw error;

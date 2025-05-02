@@ -23,17 +23,17 @@ import { AuthStore } from '../../store/auth.store';
   styleUrl: './admin.component.css',
 })
 export class AdminComponent {
-  /** The list of admins */
-  admins$ = this.admin.loadAdmins();
+  // /** The list of admins */
+  // admins$ = this.admin.loadAdmins();
 
-  /** The list of users */
-  users$ = this.admin.loadUsers();
+  // /** The list of users */
+  // users$ = this.admin.loadUsers();
 
-  /** Admin user */
-  userAdmin = this.authStore.user();
+  // /** Admin user */
+  // userAdmin = this.authStore.user();
 
-  /** The list of users created in the last 7 days */
-  recentUsers$;
+  // /** The list of users created in the last 7 days */
+  // recentUsers$;
 
   /** Chart data for users created */
   userGrowthChartData = {
@@ -78,66 +78,66 @@ export class AdminComponent {
     },
   };
 
-  constructor(
-    private admin: AdminService,
-    private authStore: AuthStore,
-  ) {
-    this.recentUsers$ = this.recentlyCreatedUsers();
-  }
+  // constructor(
+  //   private admin: AdminService,
+  //   private authStore: AuthStore,
+  // ) {
+  //   this.recentUsers$ = this.recentlyCreatedUsers();
+  // }
 
-  ngOnInit() {
-    this.authStore.initAuth();
-    this.usersPerMonth();
-  }
+  // ngOnInit() {
+  //   this.authStore.initAuth();
+  //   this.usersPerMonth();
+  // }
 
   /**
    * Fetches the list of users from the server and filters them to get most recent created.
    * @returns The number of users created in the last 7 days
    */
-  recentlyCreatedUsers() {
-    return this.users$.pipe(
-      map((users) => {
-        const now = new Date();
-        const sevenDaysAgo = new Date(
-          now.getFullYear(),
-          now.getMonth(),
-          now.getDate() - 7,
-          0,
-          0,
-          0,
-          0,
-        );
-        return users.filter((user) => {
-          const createdAt = new Date(user.$createdAt);
-          return createdAt >= sevenDaysAgo;
-        }).length;
-      }),
-    );
-  }
+  // recentlyCreatedUsers() {
+  //   return this.users$.pipe(
+  //     map((users) => {
+  //       const now = new Date();
+  //       const sevenDaysAgo = new Date(
+  //         now.getFullYear(),
+  //         now.getMonth(),
+  //         now.getDate() - 7,
+  //         0,
+  //         0,
+  //         0,
+  //         0,
+  //       );
+  //       return users.filter((user) => {
+  //         const createdAt = new Date(user.$createdAt);
+  //         return createdAt >= sevenDaysAgo;
+  //       }).length;
+  //     }),
+  //   );
+  // }
 
-  usersPerMonth() {
-    const usersFiltered = this.users$.pipe(
-      map((users) => {
-        const now = new Date();
-        const monthCounts = Array(12).fill(0);
-        users.forEach((user) => {
-          const createdAt = new Date(user.$createdAt);
-          if (createdAt.getFullYear() === now.getFullYear()) {
-            monthCounts[createdAt.getMonth()]++;
-          }
-        });
-        return monthCounts;
-      }),
-    );
+  // usersPerMonth() {
+  //   const usersFiltered = this.users$.pipe(
+  //     map((users) => {
+  //       const now = new Date();
+  //       const monthCounts = Array(12).fill(0);
+  //       users.forEach((user) => {
+  //         const createdAt = new Date(user.$createdAt);
+  //         if (createdAt.getFullYear() === now.getFullYear()) {
+  //           monthCounts[createdAt.getMonth()]++;
+  //         }
+  //       });
+  //       return monthCounts;
+  //     }),
+  //   );
 
-    return usersFiltered.subscribe({
-      next: (users) => {
-        this.userGrowthChartData.datasets[0].data = users;
-        this.userGrowthChartData = { ...this.userGrowthChartData };
-      },
-      error: (err) => {
-        console.error('Error fetching user growth data:', err);
-      },
-    });
-  }
+  //   return usersFiltered.subscribe({
+  //     next: (users) => {
+  //       this.userGrowthChartData.datasets[0].data = users;
+  //       this.userGrowthChartData = { ...this.userGrowthChartData };
+  //     },
+  //     error: (err) => {
+  //       console.error('Error fetching user growth data:', err);
+  //     },
+  //   });
+  // }
 }

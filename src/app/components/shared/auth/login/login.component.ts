@@ -73,18 +73,31 @@ export class LoginComponent {
       this.loginForm.markAllAsTouched();
       return;
     }
-
+  
     let { email, password } = this.loginForm.value;
     email = email.trim();
     this.loading = true;
-
+  
     this.authStore
       .login(email, password)
       .catch((error) => {
+        console.error('Login error:', error);
+        
+        let message = 'Login failed. Please check your credentials.';
+        if (error.message) {
+          if (error.message.includes('Invalid login')) {
+            message = 'Invalid email or password. Please try again.';
+          } else if (error.message.includes('Email not confirmed')) {
+            message = 'Please confirm your email before logging in.';
+          } else {
+            message = error.message;
+          }
+        }
+        
         this.toast.add({
           severity: 'error',
           summary: 'Login Failed',
-          detail: error.message || 'An error occurred during login',
+          detail: message,
           life: 3000,
         });
       })
