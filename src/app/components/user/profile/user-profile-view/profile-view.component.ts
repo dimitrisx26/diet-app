@@ -12,17 +12,17 @@ import {
   Validators,
 } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
-import { BadgeModule } from 'primeng/badge';
 import { UserService } from '../../../../services/user/user.service';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { InputTextModule } from 'primeng/inputtext';
 import { AuthStore } from '../../../../store/auth.store';
+import { Tag } from 'primeng/tag';
+
 
 @Component({
   selector: 'app-profile-view',
   imports: [
-    BadgeModule,
     ButtonModule,
     CommonModule,
     FormsModule,
@@ -30,6 +30,7 @@ import { AuthStore } from '../../../../store/auth.store';
     ReactiveFormsModule,
     ViewComponent,
     PanelModule,
+    Tag,
     ToastModule,
   ],
   templateUrl: './profile-view.component.html',

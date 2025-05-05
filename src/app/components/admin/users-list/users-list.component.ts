@@ -3,16 +3,16 @@ import { Component } from '@angular/core';
 import { ViewComponent } from '../../shared/view/view.component';
 import { TableModule } from 'primeng/table';
 import { RouterModule } from '@angular/router';
-import { BadgeModule } from 'primeng/badge';
 import { AdminService } from '../../../services/admin/admin.service';
+import { Tag } from 'primeng/tag';
 
 @Component({
   selector: 'app-users-list',
   imports: [
-    BadgeModule,
     CommonModule,
     ViewComponent,
     TableModule,
+    Tag,
     RouterModule,
   ],
   templateUrl: './users-list.component.html',
