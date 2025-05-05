@@ -10,7 +10,7 @@
         <div class="flex flex-col gap-2 overflow-scroll py-2">
           <div class="flex items-center gap-2">
             <strong>Name:</strong>
-            <span>{{ user.user_metadata.name }}</span>
+            <span>{{ user.name }}</span>
           </div>
           <div class="flex items-center gap-2">
             <strong>Email:</strong>
@@ -18,7 +18,7 @@
           </div>
           <div class="flex items-center gap-2">
             <strong>Email Verified:</strong>
-            @if (user.user_metadata.email_verified) {
+            @if (user.email_verified) {
               <p-badge
                 value="Yes"
                 severity="success"
@@ -34,11 +34,11 @@
           </div>
           <div class="flex items-center gap-2">
             <strong>Phone:</strong>
-            <span>{{ user.user_metadata.phone || "-" }}</span>
+            <span>{{ user.phone || "-" }}</span>
           </div>
           <div class="flex items-center gap-2">
             <strong>Phone Verified:</strong>
-            @if (user.user_metadata.phone_verified) {
+            @if (user.phone_verified) {
               <p-badge
                 value="Yes"
                 severity="success"
@@ -55,8 +55,8 @@
           <div class="flex items-center gap-2">
             <strong>Last Login At:</strong>
             <span>{{
-              user.last_sign_in_at
-                ? (user.last_sign_in_at | date: "dd/MM/yy")
+              user.last_login
+                ? (user.last_login | date: "dd/MM/yy")
                 : "-"
             }}</span>
           </div>

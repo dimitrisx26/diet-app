@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { SupabaseService } from '../supabase/supabase.service';
+import { User } from '@supabase/supabase-js';
 
 @Injectable({
   providedIn: 'root',
@@ -21,7 +22,6 @@ export class AdminService {
    */
   async getAdminUsers() {
     try {
-      // First get all user_roles where is_admin is true
       const { data: adminRoles, error: rolesError } = await this.supabase
         .getSupabase()
         .from('user_roles')
@@ -121,6 +121,42 @@ export class AdminService {
       });
       console.error('Error in getClientUsers:', err);
       return [];
+    }
+  }
+
+  /**
+   * It loads a user's data based on their id
+   * @param id the user's id
+   * @returns the user's data or null
+   */
+  async getUserById(id: string): Promise<any | null> {
+    try {
+      const { data, error } = await this.supabase
+        .getSupabase()
+        .from('user_profiles')
+        .select('*')
+        .eq('id', id)
+        .maybeSingle();
+
+      if (error) {
+        this.toast.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: `Failed to fetch user profile for ID: ${id}`,
+        });
+        console.error(`Error fetching user profile for ID ${id}:`, error);
+        return null;
+      }
+
+      return data;
+    } catch (err) {
+      this.toast.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'An unexpected error occurred while fetching user profile',
+      });
+      console.error('Error in getUserById:', err);
+      return null;
     }
   }
 }

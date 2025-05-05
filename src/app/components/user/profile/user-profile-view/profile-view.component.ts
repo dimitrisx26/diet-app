@@ -39,8 +39,11 @@ export class ProfileViewComponent {
   /** The user's admin state */
   isAdmin: boolean = false;
 
+  /** Loading state for the user data */
+  loading = true;
+
   /** The form group for the profile form */
-  profileForm!: FormGroup;
+  profileForm: FormGroup;
 
   /** The user's data */
   user: any;
@@ -63,6 +66,19 @@ export class ProfileViewComponent {
     private router: Router,
     private userService: UserService,
   ) {
+    this.profileForm = this.fb.group({
+      name: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.maxLength(25),
+        ],
+      ],
+      email: ['', [Validators.required, Validators.email]],
+      phone: ['', [Validators.pattern(/^(\+30|0030|30)?6\d{9}$/)]],
+    });
+
     const navigation = this.router.getCurrentNavigation();
     this.user = navigation?.extras.state?.['user'];
   }
@@ -70,41 +86,53 @@ export class ProfileViewComponent {
   /** Initializes the component */
   async ngOnInit() {
     this.isAdmin = await this.authStore.isAdmin();
-    this.loadUser();
+    await this.loadUser();
 
-    this.profileForm = this.fb.group({
-      name: [
-        this.user?.user_metadata.name || '',
-        [
-          Validators.required,
-          Validators.minLength(3),
-          Validators.maxLength(25),
-        ],
-      ],
-      email: [this.user?.email || '', [Validators.required, Validators.email]],
-      phone: [
-        this.user?.phone || '',
-        [Validators.pattern(/^(\+30|0030|30)?6\d{9}$/)],
-      ],
-    });
+    if (this.user) {
+      this.updateFormWithUserData();
+    }
+
+    this.loading = false;
   }
 
   /**
    * Loads the user data
    */
-  loadUser() {
+  async loadUser() {
     if (this.user) return;
-    // if (this.isAdmin) {
-    //   const userId = this.route.snapshot.paramMap.get('userId');
-    //   this.admin.getUserById(userId!).subscribe({
-    //     next: (user) => (this.user = user),
-    //     error: (err) => {
-    //       console.error('User not found', err);
-    //     },
-    //   });
-    // } else {
-    //   this.user = this.authStore.user();
-    // }
+
+    if (this.isAdmin) {
+      const userId = this.route.snapshot.paramMap.get('userId');
+      if (!userId) {
+        console.error('User ID not found in route parameters');
+        this.toast.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'User ID missing.',
+          life: 3000,
+        });
+        return;
+      }
+      try {
+        this.user = await this.admin.getUserById(userId);
+        if (this.user) {
+          this.updateFormWithUserData();
+        }
+      } catch (err) {
+        console.error('Failed to load user data', err);
+        this.toast.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed to load user data.',
+          life: 3000,
+        });
+      }
+    } else {
+      this.user = this.authStore.user();
+      if (this.user) {
+        this.updateFormWithUserData();
+      }
+    }
   }
 
   /**
@@ -123,10 +151,9 @@ export class ProfileViewComponent {
         name: this.profileForm.value.name,
       },
       email: this.profileForm.value.email,
-      phone: this.profileForm.value.phone,
     };
 
-    this.userService.updateUser(this.user.$id, updatedUser).subscribe({
+    this.userService.updateUser(updatedUser).subscribe({
       next: () => {
         this.toast.add({
           severity: 'success',
@@ -144,5 +171,18 @@ export class ProfileViewComponent {
         });
       },
     });
+  }
+
+  /**
+   * Update form with user data once available
+   */
+  private updateFormWithUserData() {
+    this.profileForm.patchValue({
+      name: this.user.user_metadata.name || '',
+      email: this.user.email || '',
+      phone: this.user.phone || '',
+    });
+    console.log(this.user);
+    
   }
 }
