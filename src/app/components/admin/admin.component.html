@@ -21,16 +21,24 @@
     <div class="mt-4 grid grid-cols-1 gap-6 md:grid-cols-3">
       <!-- Admins Card -->
       <div class="flex flex-col items-center rounded-lg bg-green-50 p-4 shadow">
-        <span class="text-2xl font-bold text-green-700">
-          {{ adminCount }}
-        </span>
+        @if (loading) {
+          <i class="pi pi-spinner pi-spin text-2xl text-green-700"></i>
+        } @else {
+          <span class="text-2xl font-bold text-green-700">
+            {{ adminCount }}
+          </span>
+        }
         <span class="mt-2 text-gray-500">Admins</span>
       </div>
 
       <!-- Users Card -->
       <div class="flex flex-col items-center rounded-lg bg-blue-50 p-4 shadow">
         <span class="text-2xl font-bold text-blue-700">
-          {{ userCount }}
+          @if (loading) {
+            <i class="pi pi-spinner pi-spin text-2xl text-blue-700"></i>
+          } @else {
+            {{ userCount }}
+          }
         </span>
         <span class="mt-2 text-gray-500">Users</span>
       </div>
@@ -40,7 +48,11 @@
         class="flex flex-col items-center rounded-lg bg-yellow-50 p-4 shadow"
       >
         <span class="text-2xl font-bold text-yellow-700">
-          {{ recentUsers }}
+          @if (loading) {
+            <i class="pi pi-spinner pi-spin text-2xl text-yellow-700"></i>
+          } @else {
+            {{ recentUsers }}
+          }
         </span>
         <span class="mt-2 text-gray-500">New Signups (7d)</span>
       </div>
@@ -55,12 +67,17 @@
       </div>
     </ng-template>
     <div class="p-4">
-      <p-chart
-        class="min-w-full"
-        type="line"
-        [data]="userGrowthChartData"
-        [options]="userGrowthChartOptions"
-      ></p-chart>
+      @if (!loading) {
+        <p-chart
+          type="line"
+          [data]="userGrowthChartData"
+          [options]="userGrowthChartOptions"
+        ></p-chart>
+      } @else {
+        <div class="card flex justify-center">
+            <p-progress-spinner ariaLabel="loading" />
+        </div>
+      }
     </div>
   </p-panel>
 

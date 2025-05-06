@@ -7,6 +7,7 @@ import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 import { ChartModule } from 'primeng/chart';
 import { AuthStore } from '../../store/auth.store';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-admin',
@@ -16,6 +17,7 @@ import { AuthStore } from '../../store/auth.store';
     CommonModule,
     ViewComponent,
     PanelModule,
+    ProgressSpinnerModule,
     ToastModule,
   ],
   templateUrl: './admin.component.html',
@@ -27,6 +29,9 @@ export class AdminComponent {
 
   /** The admin count */
   adminCount: number = 0;
+
+  /** The loading state of the app */
+  loading: boolean = false;
 
   /** The list of users */
   users$: Promise<any[]> | undefined;
@@ -97,6 +102,7 @@ export class AdminComponent {
    * Loads all dashboard data
    */
   private async loadData() {
+    this.loading = true;
     this.userAdmin = this.authStore.user();
 
     this.admins$ = this.admin.getAdminUsers();
@@ -109,6 +115,7 @@ export class AdminComponent {
 
     this.recentUsers = await this.calculateRecentUsers(users || []);
     this.usersPerMonth(users || []);
+    this.loading = false;
   }
 
   /**
@@ -139,6 +146,7 @@ export class AdminComponent {
    * @param users Array of users
    */
   private usersPerMonth(users: any[]) {
+    this.loading = true;
     const now = new Date();
     const monthCounts = Array(12).fill(0);
 
@@ -151,5 +159,6 @@ export class AdminComponent {
 
     this.userGrowthChartData.datasets[0].data = monthCounts;
     this.userGrowthChartData = { ...this.userGrowthChartData };
+    this.loading = false;
   }
 }
