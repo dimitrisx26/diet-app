@@ -19,7 +19,6 @@ import { InputTextModule } from 'primeng/inputtext';
 import { AuthStore } from '../../../../store/auth.store';
 import { Tag } from 'primeng/tag';
 
-
 @Component({
   selector: 'app-profile-view',
   imports: [
@@ -131,7 +130,18 @@ export class ProfileViewComponent {
     } else {
       this.user = this.authStore.user();
       if (this.user) {
-        this.updateFormWithUserData();
+        const userId = this.user.id;
+        try {
+          const userProfile = await this.admin.getUserById(userId);
+          this.user = {
+            ...this.user,
+            phone: userProfile.phone || '',
+          };
+          this.updateFormWithUserData();
+        } catch (err) {
+          console.error('Failed to load user profile data', err);
+          this.updateFormWithUserData();
+        }
       }
     }
   }
@@ -152,6 +162,7 @@ export class ProfileViewComponent {
         name: this.profileForm.value.name,
       },
       email: this.profileForm.value.email,
+      phone: this.profileForm.value.phone,
     };
 
     this.userService.updateUser(updatedUser).subscribe({
@@ -183,7 +194,5 @@ export class ProfileViewComponent {
       email: this.user.email || '',
       phone: this.user.phone || '',
     });
-    console.log(this.user);
-    
   }
 }

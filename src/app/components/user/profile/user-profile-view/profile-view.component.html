@@ -37,22 +37,6 @@
             <span>{{ user.phone || "-" }}</span>
           </div>
           <div class="flex items-center gap-2">
-            <strong>Phone Verified:</strong>
-            @if (user.phone_verified) {
-              <p-tag
-                value="Yes"
-                severity="success"
-                styleClass="text-xs px-2 py-1"
-              ></p-tag>
-            } @else {
-              <p-tag
-                value="No"
-                severity="danger"
-                styleClass="text-xs px-2 py-1"
-              ></p-tag>
-            }
-          </div>
-          <div class="flex items-center gap-2">
             <strong>Last Login At:</strong>
             <span>{{
               user.last_login
