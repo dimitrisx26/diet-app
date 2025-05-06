@@ -40,13 +40,13 @@
                   user: user,
                 }"
               >
-                {{ user.name || "-" }}
+                {{ user.name || "" }}
               </a>
             } @else {
-              -
+              &nbsp;
             }
           </td>
-          <td class="px-4 py-2">{{ user.email || "-" }}</td>
+          <td class="px-4 py-2">{{ user.email || "" }}</td>
           <td class="px-4 py-2">
             @if (user.email_verified) {
               <p-tag
@@ -62,16 +62,16 @@
                   styleClass="text-xs px-2 py-1"
                 ></p-tag>
               } @else {
-                -
+                &nbsp;
               }
             }
           </td>
-          <td class="px-4 py-2">{{ user.phone || "-" }}</td>
+          <td class="px-4 py-2">{{ user.phone || "" }}</td>
           <td class="px-4 py-2">
-            {{ user.last_login ? (user.last_login | date: "dd/MM/yy") : "-" }}
+            {{ user.last_login ? (user.last_login | date: "dd/MM/yy") : "" }}
           </td>
           <td class="px-4 py-2">
-            {{ user.created_at ? (user.created_at | date: "dd/MM/yy") : "-" }}
+            {{ user.created_at ? (user.created_at | date: "dd/MM/yy") : "" }}
           </td>
         </tr>
       </ng-template>
