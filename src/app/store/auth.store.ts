@@ -8,18 +8,25 @@ export interface UserState {
   user: any | null;
   isAdmin: boolean;
   isLoading: boolean;
+  adminRoleCache: {
+    [key: string]: { isAdmin: boolean; timestamp: number };
+  } | null;
 }
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthStore {
+  /** Cache expiration time in milliseconds (e.g., 10 minutes) */
+  private readonly CACHE_EXPIRATION = 10 * 60 * 1000;
+
   /** Auth state of the app */
   private state = signal<UserState>({
     isAuthenticated: false,
     user: null,
     isAdmin: false,
     isLoading: false,
+    adminRoleCache: null,
   });
 
   /** Selectors of the app */
@@ -35,7 +42,7 @@ export class AuthStore {
   constructor(
     private supabase: SupabaseService,
     private router: Router,
-  ) { }
+  ) {}
 
   /** Initialize auth state */
   async initAuth(): Promise<void> {
@@ -102,24 +109,23 @@ export class AuthStore {
           emailRedirectTo: `${window.location.origin}/auth`,
         },
       });
-      
+
       if (error) throw error;
-      
+
       if (data?.user) {
         try {
-          const { error: roleError } = await this.supabase.getSupabase()
+          const { error: roleError } = await this.supabase
+            .getSupabase()
             .from('user_roles')
-            .insert([
-              { user_id: data.user.id, is_admin: false }
-            ]);
-          
+            .insert([{ user_id: data.user.id, is_admin: false }]);
+
           if (roleError) console.error('Role creation error:', roleError);
         } catch (e) {
           console.error('Error creating role:', e);
         }
-        
-        await new Promise(resolve => setTimeout(resolve, 500));
-        
+
+        await new Promise((resolve) => setTimeout(resolve, 500));
+
         await this.loadUserAdminStatus(data.user);
         this.navigateByRole();
       }
@@ -142,22 +148,31 @@ export class AuthStore {
         user: user,
       }));
 
+      const cachedRole = this.checkAdminRoleCache(user.id);
+      if (cachedRole !== null) {
+        this.state.update((state) => ({
+          ...state,
+          isAdmin: cachedRole,
+        }));
+        return;
+      }
+
       const { data, error } = await this.supabase
         .getSupabase()
         .from('user_roles')
         .select('is_admin')
         .eq('user_id', user.id)
         .maybeSingle();
-  
+
       if (error) {
         console.error('Error querying user_roles:', error);
-        
+
         try {
           const { error: insertError } = await this.supabase
             .getSupabase()
             .from('user_roles')
             .insert([{ user_id: user.id, is_admin: false }]);
-            
+
           if (insertError) {
             console.error('Failed to create backup role:', insertError);
             throw new Error('Database error granting user');
@@ -166,9 +181,11 @@ export class AuthStore {
           console.error('Error in backup role creation:', e);
         }
       }
-  
+
       const isAdmin = data?.is_admin || false;
-  
+
+      this.updateAdminRoleCache(user.id, isAdmin);
+
       this.state.update((state) => ({
         ...state,
         isAuthenticated: true,
@@ -177,7 +194,7 @@ export class AuthStore {
       }));
     } catch (error) {
       console.error('Error loading admin status:', error);
-      
+
       this.state.update((state) => ({
         ...state,
         isAuthenticated: true,
@@ -208,6 +225,39 @@ export class AuthStore {
       user: null,
       isAdmin: false,
       isLoading: false,
+      adminRoleCache: {},
     }));
+  }
+
+  /** Check if admin role is in cache and still valid */
+  private checkAdminRoleCache(userId: string): boolean | null {
+    const cache = this.state().adminRoleCache;
+    if (!cache || !cache[userId]) return null;
+
+    const entry = cache[userId];
+    const now = Date.now();
+
+    if (now - entry.timestamp < this.CACHE_EXPIRATION) {
+      return entry.isAdmin;
+    }
+
+    return null;
+  }
+
+  /** Update admin role cache */
+  private updateAdminRoleCache(userId: string, isAdmin: boolean): void {
+    this.state.update((state) => {
+      const currentCache = state.adminRoleCache || {};
+      return {
+        ...state,
+        adminRoleCache: {
+          ...currentCache,
+          [userId]: {
+            isAdmin,
+            timestamp: Date.now(),
+          },
+        },
+      };
+    });
   }
 }

@@ -2,15 +2,29 @@ import { Injectable } from '@angular/core';
 import { Observable, from, throwError } from 'rxjs';
 import { SupabaseService } from '../supabase/supabase.service';
 import { catchError, map } from 'rxjs/operators';
+import { CacheService } from '../cache/cache.service';
+import { AdminService } from '../admin/admin.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
+  /** Cache key */
+  private readonly USER_PROFILE_CACHE_PREFIX = 'user_profile_';
+
+  /** Cache duration */
+  private readonly USER_PROFILE_CACHE_TTL = 10 * 60 * 1000;
+
   /**
+   * @param admin Instance of the admin service
+   * @param cache CacheService instance
    * @param supabase Instance of the supabase service
    */
-  constructor(private supabase: SupabaseService) {}
+  constructor(
+    private admin: AdminService,
+    private cache: CacheService,
+    private supabase: SupabaseService,
+  ) {}
 
   /**
    * Updates a user's profile in Supabase
@@ -37,6 +51,13 @@ export class UserService {
           this.updateUserPhone(response.data.user.id, userData.phone);
         }
 
+        if (response.data.user.id) {
+          this.cache.remove(
+            `${this.USER_PROFILE_CACHE_PREFIX}${response.data.user.id}`,
+          );
+          this.admin.invalidateUserCache(response.data.user.id);
+        }
+
         return response.data;
       }),
       catchError((error) => {
@@ -60,6 +81,9 @@ export class UserService {
       .upsert({ id: userId, phone: phone })
       .then(({ error }) => {
         if (error) console.error('Error updating phone in profile:', error);
+        else {
+          this.cache.remove(`${this.USER_PROFILE_CACHE_PREFIX}${userId}`);
+        }
       });
   }
 }
