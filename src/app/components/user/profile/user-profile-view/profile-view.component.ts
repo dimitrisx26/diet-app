@@ -17,7 +17,6 @@ import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { InputTextModule } from 'primeng/inputtext';
 import { AuthStore } from '../../../../store/auth.store';
-import { Tag } from 'primeng/tag';
 
 @Component({
   selector: 'app-profile-view',
@@ -29,7 +28,6 @@ import { Tag } from 'primeng/tag';
     ReactiveFormsModule,
     ViewComponent,
     PanelModule,
-    Tag,
     ToastModule,
   ],
   templateUrl: './profile-view.component.html',
@@ -190,7 +188,7 @@ export class ProfileViewComponent {
    */
   private updateFormWithUserData() {
     this.profileForm.patchValue({
-      name: this.user.user_metadata.name || '',
+      name: this.user.user_metadata?.name || this.user.name || '',
       email: this.user.email || '',
       phone: this.user.phone || '',
     });

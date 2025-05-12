@@ -1,152 +1,152 @@
 <app-view header="Profile">
-  <p-panel [toggleable]="true" class="w-full p-0">
-    <ng-template pTemplate="header">
-      <div class="text-gray-600">
-        <span>Summary</span>
-      </div>
-    </ng-template>
-    @if (user) {
-      @if (isAdmin) {
-        <div class="flex flex-col gap-2 overflow-scroll py-2">
-          <div class="flex items-center gap-2">
-            <strong>Name:</strong>
-            <span>{{ user.name }}</span>
+  <div class="flex w-full flex-col gap-6">
+    <!-- Profile Summary Panel -->
+    <p-panel [toggleable]="true" class="w-full p-0">
+      <ng-template pTemplate="header">
+        <div class="flex items-center gap-2 text-gray-600">
+          <i class="pi pi-user"></i>
+          <span>Profile Summary</span>
+        </div>
+      </ng-template>
+      @if (user) {
+        <div class="flex flex-col gap-6 py-4 md:flex-row">
+          <!-- Left: Basic Info -->
+          <div class="flex flex-1 flex-col gap-4">
+            <div class="flex items-center gap-2">
+              <i class="pi pi-id-card text-primary-500"></i>
+              <strong>Name:</strong>
+              {{ user.name || user.user_metadata?.name || user.email }}
+            </div>
+            <div class="flex items-center gap-2">
+              <i class="pi pi-envelope text-primary-500"></i>
+              <strong>Email:</strong>
+              <span>{{ user.email }}</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i class="pi pi-phone text-primary-500"></i>
+              <strong>Phone:</strong>
+              <span>{{ user.phone || "-" }}</span>
+            </div>
           </div>
-          <div class="flex items-center gap-2">
-            <strong>Email:</strong>
-            <span>{{ user.email }}</span>
-          </div>
-          <div class="flex items-center gap-2">
-            <strong>Email Verified:</strong>
-            @if (user.email_verified) {
-              <p-tag
-                value="Yes"
-                severity="success"
-                styleClass="text-xs px-2 py-1"
-              ></p-tag>
-            } @else {
-              <p-tag
-                value="No"
-                severity="danger"
-                styleClass="text-xs px-2 py-1"
-              ></p-tag>
-            }
-          </div>
-          <div class="flex items-center gap-2">
-            <strong>Phone:</strong>
-            <span>{{ user.phone || "-" }}</span>
-          </div>
-          <div class="flex items-center gap-2">
-            <strong>Last Login At:</strong>
-            <span>{{
-              user.last_login
-                ? (user.last_login | date: "dd/MM/yy")
-                : "-"
-            }}</span>
+          <!-- Right: Activity Info -->
+          <div class="flex flex-1 flex-col gap-4">
+            <div class="flex items-center gap-2">
+              <i class="pi pi-calendar-plus text-primary-500"></i>
+              <strong>Joined At:</strong>
+              <span>{{
+                user.created_at ? (user.created_at | date: "dd/MM/yy") : "-"
+              }}</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i class="pi pi-sign-in text-primary-500"></i>
+              <strong>Last Login:</strong>
+              <span>{{
+                user.last_login ? (user.last_login | date: "dd/MM/yy") : "-"
+              }}</span>
+            </div>
           </div>
         </div>
-        <div class="flex items-center gap-2">
-          <strong>Joined At:</strong>
-          <span>{{
-            user.created_at ? (user.created_at | date: "dd/MM/yy") : "-"
-          }}</span>
-        </div>
-      } @else {
-        <form
-          [formGroup]="profileForm"
-          (ngSubmit)="onSave()"
-          class="flex w-full flex-col gap-6 overflow-scroll"
-        >
-          <div class="flex flex-col gap-1">
-            <label class="font-medium text-gray-700">Name</label>
-            <input
-              pInputText
-              formControlName="name"
-              class="focus:ring-primary-400 w-full rounded border border-gray-300 px-3 py-2 transition focus:outline-none focus:ring-2"
-              [readonly]="isAdmin"
-            />
-            <div
-              *ngIf="
-                profileForm.get('name')?.touched &&
-                profileForm.get('name')?.invalid
-              "
-              class="text-xs text-red-500"
-            >
-              <div *ngIf="profileForm.get('name')?.errors?.['required']">
-                Name is required.
+        @if (!isAdmin) {
+          <hr class="my-4" />
+          <!-- Editable Form for Non-Admins -->
+          <form
+            [formGroup]="profileForm"
+            (ngSubmit)="onSave()"
+            class="flex w-full flex-col gap-6"
+          >
+            <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+              <div class="flex flex-col gap-1">
+                <label class="font-medium text-gray-700">Name</label>
+                <input
+                  pInputText
+                  formControlName="name"
+                  class="focus:ring-primary-400 w-full rounded border border-gray-300 px-3 py-2 transition focus:outline-none focus:ring-2"
+                />
+                <div
+                  *ngIf="
+                    profileForm.get('name')?.touched &&
+                    profileForm.get('name')?.invalid
+                  "
+                  class="text-xs text-red-500"
+                >
+                  <div *ngIf="profileForm.get('name')?.errors?.['required']">
+                    Name is required.
+                  </div>
+                  <div *ngIf="profileForm.get('name')?.errors?.['minlength']">
+                    Name must be at least 3 characters.
+                  </div>
+                  <div *ngIf="profileForm.get('name')?.errors?.['maxlength']">
+                    Name must be at most 25 characters.
+                  </div>
+                </div>
               </div>
-              <div *ngIf="profileForm.get('name')?.errors?.['minlength']">
-                Name must be at least 3 characters.
+              <div class="flex flex-col gap-1">
+                <label class="font-medium text-gray-700">Email</label>
+                <input
+                  pInputText
+                  formControlName="email"
+                  class="focus:ring-primary-400 w-full rounded border border-gray-300 px-3 py-2 transition focus:outline-none focus:ring-2"
+                />
+                <div
+                  *ngIf="
+                    profileForm.get('email')?.touched &&
+                    profileForm.get('email')?.invalid
+                  "
+                  class="text-xs text-red-500"
+                >
+                  <div *ngIf="profileForm.get('email')?.errors?.['required']">
+                    Email is required.
+                  </div>
+                  <div *ngIf="profileForm.get('email')?.errors?.['email']">
+                    Invalid email address.
+                  </div>
+                </div>
               </div>
-              <div *ngIf="profileForm.get('name')?.errors?.['maxlength']">
-                Name must be at most 25 characters.
-              </div>
-            </div>
-          </div>
-          <div class="flex flex-col gap-1">
-            <label class="font-medium text-gray-700">Email</label>
-            <input
-              pInputText
-              formControlName="email"
-              class="focus:ring-primary-400 w-full rounded border border-gray-300 px-3 py-2 transition focus:outline-none focus:ring-2"
-              [readonly]="isAdmin"
-            />
-            <div
-              *ngIf="
-                profileForm.get('email')?.touched &&
-                profileForm.get('email')?.invalid
-              "
-              class="text-xs text-red-500"
-            >
-              <div *ngIf="profileForm.get('email')?.errors?.['required']">
-                Email is required.
-              </div>
-              <div *ngIf="profileForm.get('email')?.errors?.['email']">
-                Invalid email address.
-              </div>
-            </div>
-          </div>
-          <div class="flex flex-col gap-1">
-            <label class="font-medium text-gray-700">Phone</label>
-            <input
-              pInputText
-              formControlName="phone"
-              class="focus:ring-primary-400 w-full rounded border border-gray-300 px-3 py-2 transition focus:outline-none focus:ring-2"
-              [readonly]="isAdmin"
-            />
-            <div
-              *ngIf="
-                profileForm.get('phone')?.touched &&
-                profileForm.get('phone')?.invalid
-              "
-              class="text-xs text-red-500"
-            >
-              <div *ngIf="profileForm.get('phone')?.errors?.['pattern']">
-                Invalid phone number. Format: +306XXXXXXXXX or 69XXXXXXXXX
+              <div class="flex flex-col gap-1 md:col-span-2">
+                <label class="font-medium text-gray-700">Phone</label>
+                <input
+                  pInputText
+                  formControlName="phone"
+                  class="focus:ring-primary-400 w-full rounded border border-gray-300 px-3 py-2 transition focus:outline-none focus:ring-2"
+                />
+                <div
+                  *ngIf="
+                    profileForm.get('phone')?.touched &&
+                    profileForm.get('phone')?.invalid
+                  "
+                  class="text-xs text-red-500"
+                >
+                  <div *ngIf="profileForm.get('phone')?.errors?.['pattern']">
+                    Invalid phone number. Format: +306XXXXXXXXX or 69XXXXXXXXX
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="flex justify-end">
-            <p-button
-              type="submit"
-              label="Save"
-              icon="pi pi-save"
-              class="p-button-success"
-              [disabled]="profileForm.invalid || profileForm.pristine"
-            ></p-button>
-          </div>
-        </form>
+            <div class="flex justify-end">
+              <p-button
+                type="submit"
+                label="Save"
+                icon="pi pi-save"
+                class="p-button-success"
+                [disabled]="profileForm.invalid || profileForm.pristine"
+              ></p-button>
+            </div>
+          </form>
+        }
       }
-    }
-  </p-panel>
-  <p-panel [toggleable]="true" class="w-full p-0">
-    <ng-template pTemplate="header">
-      <div class="text-gray-600">
-        <span>More Info</span>
-      </div>
-    </ng-template>
-    <!-- Panel content goes here -->
-  </p-panel>
+    </p-panel>
+
+    <!-- More Info Panel -->
+    <p-panel [toggleable]="true" class="w-full p-0">
+      <ng-template pTemplate="header">
+        <div class="flex items-center gap-2 text-gray-600">
+          <i class="pi pi-info-circle"></i>
+          <span>More Info</span>
+        </div>
+      </ng-template>
+      <!-- Panel content goes here -->
+    </p-panel>
+  </div>
 </app-view>
 
 <p-toast></p-toast>

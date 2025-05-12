@@ -2,7 +2,8 @@
   <!-- Info Panel -->
   <p-panel [toggleable]="true" class="mb-4 w-full p-0">
     <ng-template pTemplate="header">
-      <div class="font-bold text-gray-600">
+      <div class="flex items-center gap-2 text-gray-600">
+        <i class="pi pi-info-circle"></i>
         <span>Info</span>
       </div>
     </ng-template>
@@ -14,7 +15,8 @@
   <!-- Stats Panel -->
   <p-panel [toggleable]="true" class="w-full p-0">
     <ng-template pTemplate="header">
-      <div class="text-gray-600">
+      <div class="flex items-center gap-2 text-gray-600">
+        <i class="pi pi-percentage"></i>
         <span>Stats</span>
       </div>
     </ng-template>
@@ -62,7 +64,8 @@
   <!-- User Growth Chart Panel -->
   <p-panel [toggleable]="true" class="mt-4 w-full p-0">
     <ng-template pTemplate="header">
-      <div class="text-gray-600">
+      <div class="flex items-center gap-2 text-gray-600">
+        <i class="pi pi-chart-line"></i>
         <span>User Growth</span>
       </div>
     </ng-template>
@@ -75,7 +78,7 @@
         ></p-chart>
       } @else {
         <div class="card flex justify-center">
-            <p-progress-spinner ariaLabel="loading" />
+          <p-progress-spinner ariaLabel="loading" />
         </div>
       }
     </div>

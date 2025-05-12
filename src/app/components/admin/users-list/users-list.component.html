@@ -14,9 +14,6 @@
         <tr class="bg-gray-100">
           <th class="px-4 py-3 text-left font-semibold text-gray-700">Name</th>
           <th class="px-4 py-3 text-left font-semibold text-gray-700">Email</th>
-          <th class="px-4 py-3 text-left font-semibold text-gray-700">
-            Email Verified
-          </th>
           <th class="px-4 py-3 text-left font-semibold text-gray-700">Phone</th>
           <th class="px-4 py-3 text-left font-semibold text-gray-700">
             Last Login
@@ -47,25 +44,6 @@
             }
           </td>
           <td class="px-4 py-2">{{ user.email || "" }}</td>
-          <td class="px-4 py-2">
-            @if (user.email_verified) {
-              <p-tag
-                value="Yes"
-                severity="success"
-                styleClass="text-xs px-2 py-1"
-              ></p-tag>
-            } @else {
-              @if (!user.isPlaceholder) {
-                <p-tag
-                  value="No"
-                  severity="danger"
-                  styleClass="text-xs px-2 py-1"
-                ></p-tag>
-              } @else {
-                &nbsp;
-              }
-            }
-          </td>
           <td class="px-4 py-2">{{ user.phone || "" }}</td>
           <td class="px-4 py-2">
             {{ user.last_login ? (user.last_login | date: "dd/MM/yy") : "" }}

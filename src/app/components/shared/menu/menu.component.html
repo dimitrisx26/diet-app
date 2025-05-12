@@ -40,13 +40,6 @@
         >
       } @else {
         <a
-          routerLink="/profile"
-          routerLinkActive="bg-gray-200 text-black"
-          class="mb-6 flex cursor-pointer items-center gap-2 rounded p-2 text-inherit no-underline transition-colors duration-300 hover:bg-gray-100 hover:text-gray-800"
-        >
-          <span class="pi pi-user"></span>Profile
-        </a>
-        <a
           routerLink="/diet-plan"
           routerLinkActive="bg-gray-200 text-black"
           class="mb-6 flex cursor-pointer items-center gap-2 rounded p-2 text-inherit no-underline transition-colors duration-300 hover:bg-gray-100 hover:text-gray-800"
@@ -69,6 +62,7 @@
     <div class="flex flex-col items-center justify-center">
       <a
         routerLink="/profile"
+        routerLinkActive="bg-gray-200 text-black"
         class="mb-2 flex cursor-pointer items-center gap-4 rounded p-2 text-inherit no-underline transition-colors duration-300 hover:bg-gray-100 hover:text-gray-800"
       >
         @if (isAdmin) {

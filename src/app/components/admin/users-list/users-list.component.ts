@@ -4,7 +4,6 @@ import { ViewComponent } from '../../shared/view/view.component';
 import { TableModule } from 'primeng/table';
 import { RouterModule } from '@angular/router';
 import { AdminService } from '../../../services/admin/admin.service';
-import { Tag } from 'primeng/tag';
 
 @Component({
   selector: 'app-users-list',
@@ -12,7 +11,6 @@ import { Tag } from 'primeng/tag';
     CommonModule,
     ViewComponent,
     TableModule,
-    Tag,
     RouterModule,
   ],
   templateUrl: './users-list.component.html',
