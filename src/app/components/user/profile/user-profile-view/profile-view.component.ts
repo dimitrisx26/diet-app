@@ -34,6 +34,9 @@ import { AuthStore } from '../../../../store/auth.store';
   styleUrl: './profile-view.component.css',
 })
 export class ProfileViewComponent {
+  /** Toggles the visibility of the edit form */
+  editMode: boolean = false;
+
   /** The user's admin state */
   isAdmin: boolean = false;
 
@@ -181,6 +184,14 @@ export class ProfileViewComponent {
         });
       },
     });
+  }
+
+  /** Toggles the edit form */
+  toggleEdit() {
+    this.editMode = !this.editMode;
+    if (this.editMode) {
+      this.profileForm.markAsPristine();
+    }
   }
 
   /**
